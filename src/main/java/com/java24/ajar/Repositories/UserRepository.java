@@ -1,0 +1,10 @@
+package com.java24.ajar.Repositories;
+
+import com.java24.ajar.models.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.Optional;
+
+public interface UserRepository extends MongoRepository {
+    Optional<User> findByUsername(String username);
+}
