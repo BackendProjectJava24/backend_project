@@ -1,5 +1,6 @@
 package com.java24.ajar.models;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.data.annotation.Id;
@@ -69,8 +70,8 @@ public class User {
         return username;
     }
 
-    public void setUsername(){
-        this.username = username;
+    public void setUsername(@NotBlank String username){
+        this.username = this.username;
     }
 
     public  String getPassword() {
