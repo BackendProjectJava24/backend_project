@@ -1,10 +1,11 @@
 package com.java24.ajar.config;
 
-import com.java24.ajar.models.JwtAuthenticationFilter;
+import com.java24.ajar.filters.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,43 +21,48 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    public SecurityConfig(final JwtAuthenticationFilter jwtAuthenticationFilter) {
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
-
     // add jwt filter before standard filter
-    // create AuthenticationManager which us the "boss" if the authentication process
+    // create AuthenticationManager which is the "boss" of the authentication process
     @Bean
-    public AuthenticationManager authenticationManagerBean(
+    public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // mainn cofig for security filter and rules
+    // main config for security filter and rules
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 // CORS config
-                .cors(cors ->cors.configurationSource(corsConfigurationSource))
-                //CSRFmdisable in deb
-                // OBS! sould not be disabled in production
-                .csrf(csrf ->csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // CSRF, disable in dev
+                // OBS! should not be disabled in production
+                .csrf(csrf -> csrf.disable())
                 // define URL based rules
-                .authorizeHttpRequests(auth ->auth
-                        .requestMatchers("/api/auth/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/products/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/orders/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        //.requestMatchers("/products/**").permitAll()
                         // any other requests the user need to be logged
-                        .anyRequest().authenticated())
-                // disable session due to jwt statelessness
-                .sessionManagement(session ->session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .anyRequest().authenticated()
                 )
-                // if add jwt filter before standard filter
+                // disable session due to jwt statelessness
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                // add jwt filter before standard filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        return  http.build();
     }
 
     // cors config
@@ -64,9 +70,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // only allow requset from our future react client
+        // only allow request from our future react client
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(List.of("Set-Cookie"));
@@ -76,8 +82,8 @@ public class SecurityConfig {
         return source;
     }
 
-@Bean
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
-}
+    }
 }

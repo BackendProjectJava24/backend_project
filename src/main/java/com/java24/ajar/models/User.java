@@ -13,6 +13,7 @@ import java.util.Set;
 public class User {
     @Id
     private String id;
+
     @Indexed(unique = true)
     @NotEmpty(message = "Username cannot be empty")
     private String username;
@@ -24,10 +25,39 @@ public class User {
                     "one uppercase letter, one number, and one special character"
     )
     private String password;
-    private String firstName;
-    private String lastName;
 
     private Set<Role> roles;
+
+    public User() {
+    }
+
+    public User(String username, String password, Set<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
     public Set<Role> getRoles() {
         return roles;
@@ -35,98 +65,5 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    private String email;
-    private String phone;
-    private String address;
-    private String created_at;
-
-    public User() {
-    }
-
-    public User(String id, String username, String password, String firstName, String lastName, Set<Role> roles, String email, String phone, String address, String created_at) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.roles = roles;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.created_at = created_at;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public  String getUsername() {
-        return username;
-    }
-
-    public void setUsername(@NotBlank String username){
-        this.username = this.username;
-    }
-
-    public  String getPassword() {
-        return password;
-    }
-
-    public void setPassword( String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
     }
 }
