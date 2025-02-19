@@ -53,6 +53,13 @@ public class AuthController {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());
+        user.setFirstName(registerRequest.getFirstName());
+        user.setLastName(registerRequest.getLastName());
+        user.setEmail(registerRequest.getEmail());
+        user.setPhone(registerRequest.getPhone());
+        user.setAddress(registerRequest.getAddress());
+        user.setCreated_at(registerRequest.getCreated_at());
+
 
         // assign roles
         if (registerRequest.getRoles() == null || registerRequest.getRoles().isEmpty()) {
@@ -68,7 +75,13 @@ public class AuthController {
         RegisterResponse response = new RegisterResponse(
                 "User registered successfully",
                 user.getUsername(),
-                user.getRoles()
+                user.getRoles(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail()
+                ,user.getPhone(),
+                user.getAddress(),
+                user.getCreated_at()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
