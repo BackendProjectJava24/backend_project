@@ -1,5 +1,6 @@
 package com.java24.ajar.controllers;
 
+import com.java24.ajar.Repositories.UserRepository;
 import com.java24.ajar.dto.AuthRequest;
 import com.java24.ajar.dto.AuthResponse;
 import com.java24.ajar.dto.RegisterRequest;
@@ -8,7 +9,6 @@ import com.java24.ajar.dto.RegisterResponse;
 import com.java24.ajar.models.Role;
 import com.java24.ajar.models.User;
 import com.java24.ajar.services.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,10 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -34,10 +31,12 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
+
     public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
+
     }
 
     @PostMapping("/register")
@@ -60,7 +59,6 @@ public class AuthController {
         user.setAddress(registerRequest.getAddress());
         user.setCreated_at(registerRequest.getCreated_at());
 
-
         // assign roles
         if (registerRequest.getRoles() == null || registerRequest.getRoles().isEmpty()) {
             user.setRoles(Set.of(Role.USER));
@@ -79,7 +77,7 @@ public class AuthController {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail()
-                ,user.getPhone(),
+                , user.getPhone(),
                 user.getAddress(),
                 user.getCreated_at()
         );
@@ -88,7 +86,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest) {
 
         try {
             // authenticate user

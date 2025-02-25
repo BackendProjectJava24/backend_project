@@ -45,6 +45,32 @@ public class UserService {
         return userRepository.findByUsername(username).isPresent();
     }
 
+    // update a user informantion
+    public User updateUser(String username, User user) {
+        User userToUpdate = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(user.getUsername() + " not found"));
+
+        userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+        userToUpdate.setRoles(user.getRoles());
+        userToUpdate.setFirstName(user.getFirstName());
+        userToUpdate.setLastName(user.getLastName());
+        userToUpdate.setEmail(user.getEmail());
+        userToUpdate.setPhone(user.getPhone());
+        user.setAddress(user.getAddress());
+        return userRepository.save(userToUpdate);
+    }
+
+    public void deleteUser(String username) {
+        User user = findByUsername(username);
+        if(user != null) {
+            userRepository.delete(user);
+        } else {
+            throw new UsernameNotFoundException(user.getUsername() + " not found");
+        }
+    }
+
+
+
 
 
 
