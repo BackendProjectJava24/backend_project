@@ -63,13 +63,13 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
-    }
+    }            
 
     public  String getUsername() {
         return username;
     }
 
-    public void setUsername(){
+    public void setUsername(String username){
         this.username = username;
     }
 
@@ -125,6 +125,7 @@ public class User {
         return created_at;
     }
 
+    
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
