@@ -1,13 +1,12 @@
 package com.java24.ajar.dto;
 
 import com.java24.ajar.models.AvailabilityPeriod;
-import com.java24.ajar.models.User;
+
 
 import java.util.ArrayList;
 
 public class PlaceResponse {
     private String ownerId;
-
     private String placeName;
     private String description;
     private String[] address = new String[2];

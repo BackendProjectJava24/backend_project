@@ -16,11 +16,11 @@ public class Place {
     private String name;
     private String description;
     private String[] address = new String[3];
-    private ArrayList<String> imageURL = new ArrayList<>();
+    private List<String> imageURL;
     private int capacity;
     private int bedroom;
     private double price;
-    private ArrayList<AvailabilityPeriod> availability = new ArrayList<>();
+    private List<AvailabilityPeriod> availability;
     @DBRef
     private User ownerID;
     private String placeType;
@@ -68,11 +68,11 @@ public class Place {
         this.address = address;
     }
 
-    public ArrayList<String> getImageURL() {
+    public List<String> getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(ArrayList<String> imageURL) {
+    public void setImageURL(List<String> imageURL) {
         this.imageURL = imageURL;
     }
 
@@ -100,11 +100,11 @@ public class Place {
         this.price = price;
     }
 
-    public ArrayList<AvailabilityPeriod> getAvailability() {
+    public List<AvailabilityPeriod> getAvailability() {
         return availability;
     }
 
-    public void setAvailability(ArrayList<AvailabilityPeriod> availability) {
+    public void setAvailability(List<AvailabilityPeriod> availability) {
         this.availability = availability;
     }
 

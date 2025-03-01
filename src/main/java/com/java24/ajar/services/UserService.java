@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class UserService {
+public class UserService implements UserServiceImp{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
