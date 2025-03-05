@@ -10,6 +10,7 @@ import com.java24.ajar.models.AvailabilityPeriod;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,16 +32,22 @@ public class PlaceService implements PlaceServiceImp {
         this.userRepository = userRepository;
     }
 
-    @Override
-    public PlaceResponse createPlace(PlaceRequest placeRequest) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
+    // Add the authenticate method
+    public User getCurrentAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() ||
+                authentication instanceof AnonymousAuthenticationToken) {
             throw new UnauthorizedException("User is not authenticated");
         }
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    @Override
+    public PlaceResponse createPlace(PlaceRequest placeRequest) {
+        User user= getCurrentAuthenticatedUser();
         Place newPlace = new Place();
         newPlace.setName(placeRequest.getName());
         newPlace.setDescription(placeRequest.getDescription());
@@ -53,6 +60,7 @@ public class PlaceService implements PlaceServiceImp {
             }
         }
         newPlace.setImageURL(images);
+        newPlace.setOwnerID(user);
         newPlace.setCapacity(placeRequest.getCapacity());
         newPlace.setBedroom(placeRequest.getBedrooms());
         newPlace.setPrice(placeRequest.getPrice());
@@ -94,15 +102,8 @@ public class PlaceService implements PlaceServiceImp {
 
     @Override
     public PlaceResponse updatePlace(String id, PlaceRequest placeRequest) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
-            throw new UnauthorizedException("User is not authenticated");
-        }
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-
+        getCurrentAuthenticatedUser();
+    User user = getCurrentAuthenticatedUser();
         // confirm if the user do the update by himself
         Place placeToUpdate = placeRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("Place not found"));
@@ -124,7 +125,7 @@ public class PlaceService implements PlaceServiceImp {
         placeToUpdate.setCapacity(placeRequest.getCapacity());
         placeToUpdate.setBedroom(placeRequest.getBedrooms());
         placeToUpdate.setPrice(placeRequest.getPrice());
-
+        placeToUpdate.setOwnerID(user);
         placeToUpdate.setAvailability(validateAvailabilityPeriod(placeRequest.getAvailabilityPeriods()));
         placeToUpdate.setOwnerID(user);
         placeToUpdate.setPlaceType(placeRequest.getPlaceType());
@@ -134,15 +135,7 @@ public class PlaceService implements PlaceServiceImp {
 
     @Override
     public void deletePlace(String placeID) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
-            throw new UnauthorizedException("User is not authenticated");
-        }
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-
+       User user = getCurrentAuthenticatedUser();
         Place placeToDelete = placeRepository.findById(placeID).orElseThrow(() -> new IllegalArgumentException("Place not found"));
         if (!placeToDelete.getOwnerID().getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("You cant delete this place. You are not owner of this place");
@@ -221,6 +214,19 @@ public class PlaceService implements PlaceServiceImp {
             address.setLongitude(0.0);
         }
         return address;
+    }
+    public List<Place> searchByCity(String city) {
+        List<Place> allPlaces = placeRepository.findAll();
+        List<Place> searchedPlaces = new ArrayList<>();
+        for (Place place : allPlaces) {
+            if (place.getAddress().getCity().equals(city)) {
+                searchedPlaces.add(place);
+            }
+        }
+        if (searchedPlaces.isEmpty()) {
+            throw new RuntimeException("There are no places in the database");
+        }
+        return searchedPlaces;
     }
 
     private List<AvailabilityPeriod> validateAvailabilityPeriod(List<AvailabilityPeriod> availabilityPeriod ) {

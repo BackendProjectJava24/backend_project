@@ -36,6 +36,20 @@ public class BookingService implements BookingServiceImp {
         this.placeRepository = placeRepository;
     }
 
+    // Add the authenticate method
+    public User getCurrentAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() ||
+                authentication instanceof AnonymousAuthenticationToken) {
+            throw new UnauthorizedException("User is not authenticated");
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+    }
+
 //     skapa en ny order
 //     byter typ när vi gjort OrderResponseDTO från Order
 
@@ -89,26 +103,14 @@ public class BookingService implements BookingServiceImp {
 
 
     @Override
-    public List<BookingResponseDTO> getAllBookingsByCustomerId() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            throw new UnauthorizedException("User is not authenticated");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        List<Booking> bookings =  bookingRepository.findByCustomerId(user.getId());
+    public List<Booking> getAllBookingsByCustomerId(String customerId) {
+             User user =   getCurrentAuthenticatedUser();
+        List<Booking> bookings =  bookingRepository.findByCustomerId(customerId);
         if (bookings.isEmpty()) {
-            throw new UnauthorizedException("User has not any bookings");
+            throw new IllegalArgumentException("User has not any bookings");
         }
-        List<BookingResponseDTO> bookingResponseDTOS = new ArrayList<>();
-        for (Booking booking : bookings) {
-            bookingResponseDTOS.add(converToBookingResponseDTO1(booking));
-        }
-        return bookingResponseDTOS;
+
+        return bookings;
     }
 
     @Override
@@ -120,20 +122,20 @@ public class BookingService implements BookingServiceImp {
          return   converToBookingResponseDTO1(booking);
     }
 
+    public List<Booking> getBookingsByUser() {
+        User user =   getCurrentAuthenticatedUser();
+        List<Booking> bookings =  bookingRepository.findByCustomerId(user.getId());
+        if (bookings.isEmpty()) {
+            throw new IllegalArgumentException("User has not any bookings");
+        }
+
+        return bookings;
+    }
+
 
     @Override
     public BookingResponseDTO createBooking(BookingDTO bookingDTO) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            throw new UnauthorizedException("User is not authenticated");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-
+User user = getCurrentAuthenticatedUser();
         List<Place> places = new ArrayList<>();
         Map<String, Integer> quantities = new HashMap<>();
         double totalAmount = 0.0;

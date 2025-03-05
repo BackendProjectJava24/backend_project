@@ -43,43 +43,11 @@ public class bookingController {
     public ResponseEntity<BookingResponseDTO> addBooking(@RequestBody BookingDTO booking) {
         BookingResponseDTO saBooking = bookingService.createBooking(booking);
         return new ResponseEntity<>(saBooking, HttpStatus.CREATED);
-
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-//            throw new UnauthorizedException("User is not authenticated");
-//        }
-//
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//        User user = userRepository.findByUsername(userDetails.getUsername())
-//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-//
-//
-//        List<Place> places = new ArrayList<>();
-//        Map<String, Integer> quantities = new HashMap<>();
-//        double totalAmount = 0.0;
-//for (BookingItemDTO items : booking.getItems()) {
-//    Place place = placeRepository.findById(items.getPlaceId()).orElseThrow(() -> new IllegalArgumentException("Place not found"));
-//    places.add(place);
-//    quantities.put(items.getPlaceId(),2);
-//    totalAmount += items.getPrice() * quantities.get(items.getPlaceId());
-//}
-//
-//
-//
-//        Booking newBooking = new Booking();
-//        newBooking.setCustomer(user);
-//        newBooking.setItems(places);
-//        newBooking.setTotalAmount(totalAmount);
-//        newBooking.setQuantities(quantities);
-//
-//        Booking savedBooking = bookingRepository.save(newBooking);
-//        return  new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
-
-
     }
 
 
     @GetMapping
+    @PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<List<BookingResponse>> getAllBookings() {
         List<BookingResponse> bookings = bookingService.getAllBookings();
         return new ResponseEntity<>(bookings, HttpStatus.OK);
@@ -98,27 +66,15 @@ public class bookingController {
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
-    @GetMapping("/getUserBookings/{id}")
-    @PreAuthorize("hasRole(USER)")
-    public ResponseEntity<List<BookingResponseDTO>> getUserBookingByAdmin(@PathVariable String id) {
+    @GetMapping("/getUserBookings/{customerId}")
+    public ResponseEntity<List<Booking>> getUserBookingByAdmin(@PathVariable String customerId) {
 
-        List<BookingResponseDTO> bookings = bookingService.getAllBookingsByCustomerId();
-        if (bookings.isEmpty()) {
-            throw new UnauthorizedException("User not found");
-        }
+        List<Booking> bookings = bookingService.getAllBookingsByCustomerId(customerId);
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
-    @GetMapping("/getUserBookings")
-    public ResponseEntity<List<BookingResponseDTO>> getUserBooking() {
-
-        List<BookingResponseDTO> bookings = bookingService.getAllBookingsByCustomerId();
-        if (bookings.isEmpty()) {
-            throw new UnauthorizedException("User not found");
-        }
+    @GetMapping("/getUserBooking")
+    public ResponseEntity<List<Booking>> getUserBooking() {
+        List<Booking> bookings = bookingService.getBookingsByUser();
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
-
-
-
-
 }
