@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/products/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/bookings/**").permitAll()
+                        .requestMatchers("/bookings/**").HasAnyrole("USER", "ADMIN")
                         .requestMatchers("/auth/**").permitAll()
                         //.requestMatchers("/products/**").permitAll()
                         // any other requests the user need to be logged

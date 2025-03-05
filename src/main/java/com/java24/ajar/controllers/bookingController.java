@@ -80,6 +80,7 @@ public class bookingController {
 
 
     @GetMapping
+    @PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<List<BookingResponse>> getAllBookings() {
         List<BookingResponse> bookings = bookingService.getAllBookings();
         return new ResponseEntity<>(bookings, HttpStatus.OK);
