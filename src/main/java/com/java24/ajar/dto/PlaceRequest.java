@@ -1,23 +1,24 @@
 package com.java24.ajar.dto;
 
+import com.java24.ajar.models.Address;
 import com.java24.ajar.models.AvailabilityPeriod;
 
 import java.util.ArrayList;
 
-public class PlaceRequest {
-    private String name;
-    private String description;
-    private String[] address = new String[2];
-    private ArrayList<String> imageUrl = new ArrayList<>();
-    private int capacity;
-    private  int bedrooms;
-    private double price;
-    private ArrayList<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
-    private String placeType;
+    public class PlaceRequest {
+        private String name;
+        private String description;
+        private Address address;
+        private ArrayList<String> imageUrl = new ArrayList<>();
+        private int capacity;
+        private  int bedrooms;
+        private double price;
+        private ArrayList<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
+        private String placeType;
 
 
 
-    public PlaceRequest(String placeName, String description, String[] address, ArrayList<String> imageUrl, int capacity, int bedrooms, double price, ArrayList<AvailabilityPeriod> availabilityPeriods, String placeType) {
+    public PlaceRequest(String placeName, String description, Address address, ArrayList<String> imageUrl, int capacity, int bedrooms, double price, ArrayList<AvailabilityPeriod> availabilityPeriods, String placeType) {
         this.name = placeName;
         this.description = description;
         this.address = address;
@@ -37,13 +38,9 @@ public class PlaceRequest {
         return description;
     }
 
-
-
-    public String[] getAddress() {
+    public Address getAddress() {
         return address;
     }
-
-
 
     public ArrayList<String> getImageUrl() {
         return imageUrl;

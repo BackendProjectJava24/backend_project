@@ -1,5 +1,6 @@
 package com.java24.ajar.services;
 import com.java24.ajar.dto.PlaceRequest;
+import com.java24.ajar.dto.PlaceResponse;
 import com.java24.ajar.models.Place;
 
 import javax.sound.sampled.FloatControl;
@@ -8,9 +9,9 @@ import java.util.List;
 
 
 public interface PlaceServiceImp {
-     Place createPlace(PlaceRequest placeRequest);
+     PlaceResponse createPlace(PlaceRequest placeRequest);
 
-    Place updatePlace(String id,PlaceRequest placeRequest);
+    PlaceResponse updatePlace(String id,PlaceRequest placeRequest);
       void deletePlace(String placeId);
 
       List<Place> getAllPlaces();

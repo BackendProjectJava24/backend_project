@@ -31,7 +31,7 @@ private  UserRepository userRepository;
 
 
     // update user
-    @PatchMapping("/update/{username}")
+    @PatchMapping("/userUpdate/{username}")
     public ResponseEntity<?> userUpdate(@Valid @PathVariable String username, @RequestBody RegisterRequest registerRequest) {
         User usetToUpdate = userService.findByUsername(username);
 
@@ -58,7 +58,7 @@ private  UserRepository userRepository;
         return ResponseEntity.status(HttpStatus.OK).body(response1);
     }
 
-    @DeleteMapping("/delete/{username}")
+    @DeleteMapping("/userDelete/{username}")
     public ResponseEntity<?> deteteUser(@Valid @PathVariable String username, @RequestBody AuthRequest authRequest) {
         User user = userService.findByUsername(username);
         RegisterResponse response = new RegisterResponse(

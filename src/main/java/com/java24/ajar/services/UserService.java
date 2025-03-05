@@ -46,8 +46,8 @@ public class UserService implements UserServiceImp{
     }
 
     // update a user informantion
-    public User updateUser(String username, User user) {
-        User userToUpdate = userRepository.findByUsername(username)
+    public User updateUser(String id, User user) {
+        User userToUpdate = userRepository.findByUsername(id)
                 .orElseThrow(() -> new UsernameNotFoundException(user.getUsername() + " not found"));
 
         userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
