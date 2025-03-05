@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,17 +56,9 @@ public class PlaceService implements PlaceServiceImp {
         newPlace.setCapacity(placeRequest.getCapacity());
         newPlace.setBedroom(placeRequest.getBedrooms());
         newPlace.setPrice(placeRequest.getPrice());
-        List<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
-        if (placeRequest.getAvailabilityPeriods() != null) {
-            for (AvailabilityPeriod period : placeRequest.getAvailabilityPeriods()) {
-                AvailabilityPeriod newPeriod = new AvailabilityPeriod();
-                newPeriod.setStartDate(period.getStartDate());
-                newPeriod.setEndDate(period.getEndDate());
-                // copy  anather fields
-                availabilityPeriods.add(newPeriod);
-            }
-        }
-        newPlace.setAvailability(availabilityPeriods);
+
+
+        newPlace.setAvailability(validateAvailabilityPeriod(placeRequest.getAvailabilityPeriods()));
         newPlace.setOwnerID(user);
         newPlace.setPlaceType(placeRequest.getPlaceType());
 
@@ -112,7 +105,7 @@ public class PlaceService implements PlaceServiceImp {
 
         // confirm if the user do the update by himself
         Place placeToUpdate = placeRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Place not found"));
+                orElseThrow(() -> new IllegalArgumentException("Place not found"));
         if (!placeToUpdate.getOwnerID().getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("You cant delete this place. You are not owner of this place");
         }
@@ -131,11 +124,8 @@ public class PlaceService implements PlaceServiceImp {
         placeToUpdate.setCapacity(placeRequest.getCapacity());
         placeToUpdate.setBedroom(placeRequest.getBedrooms());
         placeToUpdate.setPrice(placeRequest.getPrice());
-        List<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
-        if (placeRequest.getAvailabilityPeriods() != null) {
-            placeToUpdate.setAvailability(availabilityPeriods);
-        }
-        placeToUpdate.setAvailability(placeRequest.getAvailabilityPeriods());
+
+        placeToUpdate.setAvailability(validateAvailabilityPeriod(placeRequest.getAvailabilityPeriods()));
         placeToUpdate.setOwnerID(user);
         placeToUpdate.setPlaceType(placeRequest.getPlaceType());
         placeRepository.save(placeToUpdate);
@@ -153,7 +143,7 @@ public class PlaceService implements PlaceServiceImp {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
 
-        Place placeToDelete = placeRepository.findById(placeID).orElseThrow(() -> new RuntimeException("Place not found"));
+        Place placeToDelete = placeRepository.findById(placeID).orElseThrow(() -> new IllegalArgumentException("Place not found"));
         if (!placeToDelete.getOwnerID().getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("You cant delete this place. You are not owner of this place");
         }
@@ -231,5 +221,30 @@ public class PlaceService implements PlaceServiceImp {
             address.setLongitude(0.0);
         }
         return address;
+    }
+
+    private List<AvailabilityPeriod> validateAvailabilityPeriod(List<AvailabilityPeriod> availabilityPeriod ) {
+
+        List<AvailabilityPeriod> newPeriods = new ArrayList<>();
+        for (AvailabilityPeriod period : availabilityPeriod) {
+            if (period.getStartDate().isAfter(period.getEndDate())){
+                throw new IllegalArgumentException("Start date cannot be after end date");
+            }
+            if (period.getStartDate().isAfter(period.getEndDate())){
+                throw new IllegalArgumentException("Start date cannot be before end date");
+            }
+            if (period.getStartDate().isBefore(LocalDate.now()) || period.getEndDate().isBefore(LocalDate.now())){
+                throw new IllegalArgumentException("Start date or end date cannot be in the pass");
+            }
+            for (AvailabilityPeriod newPeriod : newPeriods) {
+                if (newPeriod.getStartDate().isAfter(period.getStartDate()) || period.getStartDate().isEqual(newPeriod.getStartDate()) || period.getStartDate().isBefore(newPeriod.getEndDate()) || period.getStartDate().isEqual(newPeriod.getEndDate())
+                        && newPeriod.getEndDate().isBefore(period.getEndDate()) || period.getEndDate().isEqual(newPeriod.getEndDate())) {
+                    throw new IllegalArgumentException("you have already added this period");
+                }
+
+            }
+            newPeriods.add(period);
+        }
+        return newPeriods;
     }
 }
