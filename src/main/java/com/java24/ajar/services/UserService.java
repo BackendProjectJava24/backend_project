@@ -1,8 +1,15 @@
 package com.java24.ajar.services;
 
 import com.java24.ajar.Repositories.UserRepository;
+import com.java24.ajar.dto.UserUpdateRequest;
+import com.java24.ajar.dto.UserUpdateResponse;
+import com.java24.ajar.exceptions.UnauthorizedException;
 import com.java24.ajar.models.Role;
 import com.java24.ajar.models.User;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,24 +52,42 @@ public class UserService implements UserServiceImp{
         return userRepository.findByUsername(username).isPresent();
     }
 
-    // update a user informantion
-    public User updateUser(String id, User user) {
-        User userToUpdate = userRepository.findByUsername(id)
-                .orElseThrow(() -> new UsernameNotFoundException(user.getUsername() + " not found"));
 
-        userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
-        userToUpdate.setRoles(user.getRoles());
-        userToUpdate.setFirstName(user.getFirstName());
-        userToUpdate.setLastName(user.getLastName());
-        userToUpdate.setEmail(user.getEmail());
-        userToUpdate.setPhone(user.getPhone());
-        user.setAddress(user.getAddress());
-        return userRepository.save(userToUpdate);
+
+    // update a user informantion
+    public UserUpdateResponse updateUser(UserUpdateRequest userUpdateRequest) {
+        User existingUser = getCurrentAuthenticatedUser();
+        User updatedUser = new User();
+
+        updatedUser.setEmail(userUpdateRequest.getEmail());
+        updatedUser.setFirstName(userUpdateRequest.getFirstName());
+        updatedUser.setLastName(userUpdateRequest.getLastName());
+        updatedUser.setPhone(userUpdateRequest.getPhone());
+
+        updatedUser.setId(existingUser.getId());
+        updatedUser.setRoles(existingUser.getRoles());
+        updatedUser.setPassword(existingUser.getPassword());
+        updatedUser.setBookingList(existingUser.getBookingList());
+
+        userRepository.save(updatedUser);
+        return  convertUserToUserUpdateResponse(updatedUser);
+    }
+
+
+
+    // this method gandle the resonse anfer user update
+    private UserUpdateResponse convertUserToUserUpdateResponse(User user) {
+        UserUpdateResponse userUpdateResponse = new UserUpdateResponse();
+        userUpdateResponse.setEmail(user.getEmail());
+        userUpdateResponse.setFirstName(user.getFirstName());
+        userUpdateResponse.setLastName(user.getLastName());
+        userUpdateResponse.setPhone(user.getPhone());
+        return userUpdateResponse;
     }
 
     public void deleteUser(String username) {
         User user = findByUsername(username);
-        if(user != null) {
+        if (user != null) {
             userRepository.delete(user);
         } else {
             throw new UsernameNotFoundException(user.getUsername() + " not found");
@@ -85,7 +110,36 @@ public class UserService implements UserServiceImp{
 
 
 
+        public User getCurrentAuthenticatedUser() {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated() ||
+                    authentication instanceof AnonymousAuthenticationToken) {
+                throw new UnauthorizedException("User is not authenticated");
+            }
+
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return userRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        }
+    }
 
 
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
