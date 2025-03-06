@@ -1,12 +1,10 @@
 package com.java24.ajar.controllers;
 
-
 import com.java24.ajar.Repositories.BookingRepository;
 import com.java24.ajar.Repositories.UserRepository;
 import com.java24.ajar.dto.*;
 import com.java24.ajar.exceptions.UnauthorizedException;
 import com.java24.ajar.models.Booking;
-import com.java24.ajar.models.User;
 import com.java24.ajar.services.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,14 +20,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
-public class bookingController {
-    private static final Logger log = LoggerFactory.getLogger(bookingController.class);
+public class BookingController {
+    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
     private final BookingService bookingService;
     @Autowired
     private final BookingRepository bookingRepository;
     private UserRepository userRepository;
 
-    public bookingController(BookingService bookingService, BookingRepository bookingRepository) {
+    public BookingController(BookingService bookingService, BookingRepository bookingRepository) {
         this.bookingService = bookingService;
         this.bookingRepository = bookingRepository;
     }
