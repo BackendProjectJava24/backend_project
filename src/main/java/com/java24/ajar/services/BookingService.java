@@ -9,6 +9,7 @@ import com.java24.ajar.dto.BookingItemDTO;
 import com.java24.ajar.dto.BookingResponse;
 import com.java24.ajar.dto.BookingResponseDTO;
 import com.java24.ajar.exceptions.UnauthorizedException;
+import com.java24.ajar.models.AvailabilityPeriod;
 import com.java24.ajar.models.Booking;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +55,7 @@ public class BookingService implements BookingServiceImp {
 //     skapa en ny order
 //     byter typ när vi gjort OrderResponseDTO från Order
 
-//    public BookingResponseDTO createBooking(BookingDTO bookingDTO) {
+    //    public BookingResponseDTO createBooking(BookingDTO bookingDTO) {
 //
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
@@ -89,7 +91,7 @@ public class BookingService implements BookingServiceImp {
 //
 //        return converToBookingResponseDTO(savedBooking);
 //    }
-@Override
+    @Override
     public List<BookingResponse> getAllBookings() {
         List<Booking> bookings = bookingRepository.findAll();
 
@@ -101,11 +103,10 @@ public class BookingService implements BookingServiceImp {
     }
 
 
-
     @Override
     public List<Booking> getAllBookingsByCustomerId(String customerId) {
-             User user =   getCurrentAuthenticatedUser();
-        List<Booking> bookings =  bookingRepository.findByCustomerId(customerId);
+        User user = getCurrentAuthenticatedUser();
+        List<Booking> bookings = bookingRepository.findByCustomerId(customerId);
         if (bookings.isEmpty()) {
             throw new IllegalArgumentException("User has not any bookings");
         }
@@ -119,12 +120,12 @@ public class BookingService implements BookingServiceImp {
         if (booking == null) {
             throw new UnauthorizedException("User is not any booking");
         }
-         return   converToBookingResponseDTO1(booking);
+        return converToBookingResponseDTO1(booking);
     }
 
     public List<Booking> getBookingsByUser() {
-        User user =   getCurrentAuthenticatedUser();
-        List<Booking> bookings =  bookingRepository.findByCustomerId(user.getId());
+        User user = getCurrentAuthenticatedUser();
+        List<Booking> bookings = bookingRepository.findByCustomerId(user.getId());
         if (bookings.isEmpty()) {
             throw new IllegalArgumentException("User has not any bookings");
         }
@@ -135,7 +136,8 @@ public class BookingService implements BookingServiceImp {
 
     @Override
     public BookingResponseDTO createBooking(BookingDTO bookingDTO) {
-User user = getCurrentAuthenticatedUser();
+        // chech if the user is authenticated
+        User user = getCurrentAuthenticatedUser();
         List<Place> places = new ArrayList<>();
         Map<String, Integer> quantities = new HashMap<>();
         double totalAmount = 0.0;
@@ -143,30 +145,50 @@ User user = getCurrentAuthenticatedUser();
         for (BookingItemDTO itemDTO : bookingDTO.getItems()) {
             Place place = placeRepository.findById(itemDTO.getPlaceId())
                     .orElseThrow(() -> new IllegalArgumentException("Place not found"));
-            places.add(place);
-            if (places.isEmpty()){
-                throw new UnauthorizedException("there are no places in this booking");
+
+            // check if the place is avablw to booking by the method placeIsavableToBooking
+            // the method is not worked
+            if (placeIsAvailableToBooking(place,bookingDTO.getBookingPeriod())){
+                places.add(place);
             }
+
+        }
+        if (places.isEmpty()) {
+            throw new IllegalArgumentException("place is not available to the booking");
         }
         Booking newBooking = new Booking();
         newBooking.setCustomer(user);
+        newBooking.setBookingPeriod(bookingDTO.getBookingPeriod());
         newBooking.setItems(places);
         newBooking.setTotalAmount(totalAmount);
         newBooking.setQuantities(quantities);
 
         Booking savedBooking = bookingRepository.save(newBooking);
-        return  converToBookingResponseDTO1(savedBooking);
+        return converToBookingResponseDTO1(savedBooking);
+    }
+// the result is true all the time i need more help her to define the problem
+    private boolean placeIsAvailableToBooking(Place place, AvailabilityPeriod availabilityPeriod) {
+        LocalDate startDate = availabilityPeriod.getStartDate();
+        LocalDate endDate = availabilityPeriod.getEndDate();
+        List<AvailabilityPeriod> existingPeriods = place.getAvailability();
+
+        for (AvailabilityPeriod existingPeriod : existingPeriods) {
+            LocalDate existingStartDate = existingPeriod.getStartDate();
+            LocalDate existingEndDate = existingPeriod.getEndDate();
+
+            if (startDate.isBefore(existingEndDate) && endDate.isAfter(existingStartDate)) {
+                // There is an overlap
+                return false;
+            }
+        }
+        // No overlaps found
+        return true;
     }
 
 
 
-
-
-
-
-
     public BookingResponseDTO converToBookingResponseDTO1(Booking booking) {
-        BookingResponseDTO bookingResponseDTO  =  new BookingResponseDTO();
+        BookingResponseDTO bookingResponseDTO = new BookingResponseDTO();
         bookingResponseDTO.setId(booking.getId());
         bookingResponseDTO.setCustomerId(booking.getCustomer().getId());
         List<Place> places = booking.getItems();

@@ -19,12 +19,20 @@ public class Booking {
     private Double totalAmount;
 @DBRef
 private List<Place> items;
-
+private AvailabilityPeriod  bookingPeriod;
 private Map<String, Integer> quantities;
     @CreatedDate
     private Date createdAt;
 
     public Booking() {
+    }
+
+    public AvailabilityPeriod getBookingPeriod() {
+        return bookingPeriod;
+    }
+
+    public void setBookingPeriod(AvailabilityPeriod bookingPeriod) {
+        this.bookingPeriod = bookingPeriod;
     }
 
     public String getId() {
