@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface BookingServiceImp {
      BookingResponseDTO createBooking(BookingDTO bookingDTO);
-     List<BookingResponse> getAllBookings();
+     List<BookingResponseDTO> getAllBookings();
      // get all user's booking
-    List<Booking> getAllBookingsByCustomerId(String customerId);
+    List<BookingResponseDTO> getAllBookingsByCustomerId(String customerId);
 // get a booking by id
      BookingResponseDTO getBookingById(String id);
 }

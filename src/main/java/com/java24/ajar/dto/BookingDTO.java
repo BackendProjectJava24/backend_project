@@ -3,37 +3,47 @@ package com.java24.ajar.dto;
 import com.java24.ajar.models.AvailabilityPeriod;
 import com.java24.ajar.models.User;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class BookingDTO {
-    private User customerId;
-    private List<BookingItemDTO> items;
-    private AvailabilityPeriod bookingPeriod;
+        private String placeId;
+        private LocalDate checkInDate;
+        private LocalDate checkOutDate;
+        private int guests;
 
     public BookingDTO() {
     }
 
-    public AvailabilityPeriod getBookingPeriod() {
-        return bookingPeriod;
+    public String getPlaceId() {
+        return placeId;
     }
 
-    public void setBookingPeriod(AvailabilityPeriod bookingPeriod) {
-        this.bookingPeriod = bookingPeriod;
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
     }
 
-    public User getCustomerId() {
-        return customerId;
+    public LocalDate getCheckInDate() {
+        return checkInDate;
     }
 
-    public void setCustomerId(User customerId) {
-        this.customerId = customerId;
+    public void setCheckInDate(LocalDate checkInDate) {
+        this.checkInDate = checkInDate;
     }
 
-    public List<BookingItemDTO> getItems() {
-        return items;
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
     }
 
-    public void setItems(List<BookingItemDTO> items) {
-        this.items = items;
+    public void setCheckOutDate(LocalDate checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
+
+    public int getGuests() {
+        return guests;
+    }
+
+    public void setGuests(int guests) {
+        this.guests = guests;
     }
 }

@@ -5,35 +5,33 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Document(collection = "bookings")
 public class Booking {
-@Id
+    @Id
     private String id;
 
-@DBRef
+    @DBRef
     private User customer;
-    private Double totalAmount;
-@DBRef
-private List<Place> items;
-private AvailabilityPeriod  bookingPeriod;
-private Map<String, Integer> quantities;
+    @DBRef
+    private Place place;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
+
+    private int guests;  // Number of people staying
+
+    private Double totalAmount;  // Calculated based on nights × price
+
     @CreatedDate
-    private Date createdAt;
+    private LocalDate createdAt;
 
     public Booking() {
     }
 
-    public AvailabilityPeriod getBookingPeriod() {
-        return bookingPeriod;
-    }
-
-    public void setBookingPeriod(AvailabilityPeriod bookingPeriod) {
-        this.bookingPeriod = bookingPeriod;
-    }
 
     public String getId() {
         return id;
@@ -51,20 +49,36 @@ private Map<String, Integer> quantities;
         this.customer = customer;
     }
 
-    public List<Place> getItems() {
-        return items;
+    public Place getPlace() {
+        return place;
     }
 
-    public void setItems(List<Place> items) {
-        this.items = items;
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public LocalDate getCheckInDate() {
+        return checkInDate;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCheckInDate(LocalDate checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(LocalDate checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
+
+    public int getGuests() {
+        return guests;
+    }
+
+    public void setGuests(int guests) {
+        this.guests = guests;
     }
 
     public Double getTotalAmount() {
@@ -75,12 +89,11 @@ private Map<String, Integer> quantities;
         this.totalAmount = totalAmount;
     }
 
-    public Map<String, Integer> getQuantities() {
-        return quantities;
+    public LocalDate getCreatedAt() {
+        return createdAt;
     }
 
-    public void setQuantities(Map<String, Integer> quantities) {
-        this.quantities = quantities;
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
-
 }

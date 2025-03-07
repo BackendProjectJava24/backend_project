@@ -42,8 +42,8 @@ public class BookingController {
 
     @GetMapping
     @PreAuthorize("hasRole(ADMIN)")
-    public ResponseEntity<List<BookingResponse>> getAllBookings() {
-        List<BookingResponse> bookings = bookingService.getAllBookings();
+    public ResponseEntity<List<BookingResponseDTO>> getAllBookings() {
+        List<BookingResponseDTO> bookings = bookingService.getAllBookings();
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
@@ -61,14 +61,13 @@ public class BookingController {
     }
 
     @GetMapping("/getUserBookings/{customerId}")
-    public ResponseEntity<List<Booking>> getUserBookingByAdmin(@PathVariable String customerId) {
-
-        List<Booking> bookings = bookingService.getAllBookingsByCustomerId(customerId);
+    public ResponseEntity<List<BookingResponseDTO>> getUserBookingByAdmin(@RequestParam String customerId) {
+        List<BookingResponseDTO> bookings = bookingService.getAllBookingsByCustomerId(customerId);
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
-    @GetMapping("/getUserBooking")
-    public ResponseEntity<List<Booking>> getUserBooking() {
-        List<Booking> bookings = bookingService.getBookingsByUser();
-        return new ResponseEntity<>(bookings, HttpStatus.OK);
-    }
+//    @GetMapping("/getUserBooking")
+//    public ResponseEntity<List<Booking>> getUserBooking() {
+//        List<Booking> bookings = bookingService.getBookingsByUser();
+//        return new ResponseEntity<>(bookings, HttpStatus.OK);
+//    }
 }
