@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,8 +21,8 @@ public class PlaceController {
     private PlaceServiceImp placeServiceImp;
 
     @PostMapping("/newplace")
-    public ResponseEntity<PlaceResponse> addNewPlace(@RequestBody PlaceRequest placeRequest) {
-        PlaceResponse placeResponse = placeServiceImp.createPlace(placeRequest);
+    public ResponseEntity<Place> addNewPlace(@RequestBody PlaceRequest placeRequest) {
+        Place  placeResponse = placeServiceImp.createPlace(placeRequest);
         return new ResponseEntity<>(placeResponse, HttpStatus.CREATED);
     }
 
@@ -29,6 +30,11 @@ public class PlaceController {
     public ResponseEntity<List<Place>> getAllPlaces() {
         List<Place> places = placeServiceImp.getAllPlaces();
         return new ResponseEntity<>(places, HttpStatus.OK);
+    }
+    @GetMapping("/findPlaceById/{id}")
+    public ResponseEntity<PlaceResponse> getPlaceById(@PathVariable String id) {
+        PlaceResponse findedPlace = placeServiceImp.getPlaceById(id);
+        return new ResponseEntity<>(findedPlace, HttpStatus.OK);
     }
 
 
@@ -42,8 +48,8 @@ public class PlaceController {
 
 @DeleteMapping("/deleteplace/{id}")
     public ResponseEntity<Place> deletePlace(@PathVariable String id) {
-        placeServiceImp.deletePlace(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+       Place placeResponse =  placeServiceImp.deletePlace(id);
+        return new ResponseEntity<>(placeResponse, HttpStatus.NO_CONTENT);
 }
 
     @GetMapping("/availablePlaces")
@@ -51,6 +57,18 @@ public class PlaceController {
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         return placeServiceImp.findAvailablePlaces(startDate, endDate);
+    }
+
+    @GetMapping("/searchByCity/{city}")
+    public ResponseEntity<List<Place>> findByCity(@PathVariable String city) {
+        List<Place> cityPlaces = placeServiceImp.searchByCity(city);
+        return new ResponseEntity<>(cityPlaces, HttpStatus.OK);
+    }
+
+    @GetMapping("/findPlacesByPriceRange")
+    public ResponseEntity<List<Place>> findPlacesByPriceRange(@RequestParam double minPrice ,@RequestParam double maxPrice ) {
+        List<Place> findedplaces = placeServiceImp.findPlacesByPraceRange(minPrice, maxPrice);
+        return new ResponseEntity<>(findedplaces, HttpStatus.OK);
     }
 
 }

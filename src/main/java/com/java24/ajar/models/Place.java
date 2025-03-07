@@ -1,7 +1,6 @@
 package com.java24.ajar.models;
 
 
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,15 +15,27 @@ public class Place {
     private String id;
     private String name;
     private String description;
-    private Address address;
+    // address information this whould help me to filtring the places by the address info and the price range.
+    private  String steet;
+    private  String postalCode;
+    private  String city;
+    private  String country;
+    private double latitude;
+    private double longitude;
+
     private List<String> imageURL;
-    private int capacity;
+    private int gestt;
     private int bedroom;
     private double price;
     private List<AvailabilityPeriod> availability;
     @DBRef
     private User ownerID;
     private String placeType;
+
+    // class constucture
+    public Place() {
+    }
+
 
     public String getPlaceType() {
         return placeType;
@@ -34,7 +45,12 @@ public class Place {
         this.placeType = placeType;
     }
 
-    public Place() {
+    public int getGestt() {
+        return gestt;
+    }
+
+    public void setGestt(int gestt) {
+        this.gestt = gestt;
     }
 
     public String getId() {
@@ -61,27 +77,9 @@ public class Place {
         this.description = description;
     }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-    public List<String> getImageURL() {
-        return imageURL;
-    }
 
     public void setImageURL(List<String> imageURL) {
         this.imageURL = imageURL;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public int getBedroom() {
@@ -116,5 +114,55 @@ public class Place {
         this.ownerID = ownerID;
     }
 
+    public String getSteet() {
+        return steet;
+    }
 
+    public void setSteet(String steet) {
+        this.steet = steet;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public List<String> getImageURL() {
+        return imageURL;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }

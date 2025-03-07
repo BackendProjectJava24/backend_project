@@ -9,11 +9,14 @@ import java.util.List;
 
 
 public interface PlaceServiceImp {
-     PlaceResponse createPlace(PlaceRequest placeRequest);
-
+     Place createPlace(PlaceRequest placeRequest);
     PlaceResponse updatePlace(String id,PlaceRequest placeRequest);
-      void deletePlace(String placeId);
+      Place  deletePlace(String placeId);
 
       List<Place> getAllPlaces();
+      PlaceResponse getPlaceById(String placeId);
       List<Place> findAvailablePlaces(LocalDate startDate, LocalDate endDate);
+      List<Place> findPlacesByPraceRange(Double minPrice, Double maxPrice);
+
+      List<Place> searchByCity(String city);
 }

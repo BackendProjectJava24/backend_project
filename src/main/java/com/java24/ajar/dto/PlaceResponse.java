@@ -9,24 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceResponse {
-    private String ownerId;
     private String placeName;
     private String description;
-   private Address  address;
+
+    // address information this whould help me to filtring the places by the address info and the price range.
+    private  String steet;
+    private  String postalCode;
+    private  String city;
+    private  String country;
+    private double latitude;
+    private double longitude;
+
+
     private List<String> imageUrl ;
-    private int capacity;
+    private int gestt;
     private  int bedrooms;
     private double price;
     private List<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
     private String placeType;
 
-    public String getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
-    }
 
     public String getPlaceName() {
         return placeName;
@@ -45,13 +46,6 @@ public class PlaceResponse {
     }
 
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
 
     public List<String> getImageUrl() {
         return imageUrl;
@@ -61,13 +55,6 @@ public class PlaceResponse {
         this.imageUrl = imageUrl;
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
 
     public int getBedrooms() {
         return bedrooms;
@@ -91,6 +78,62 @@ public class PlaceResponse {
 
     public void setAvailabilityPeriods(List<AvailabilityPeriod> availabilityPeriods) {
         this.availabilityPeriods = availabilityPeriods;
+    }
+
+    public String getSteet() {
+        return steet;
+    }
+
+    public void setSteet(String steet) {
+        this.steet = steet;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public int getGestt() {
+        return gestt;
+    }
+
+    public void setGestt(int gestt) {
+        this.gestt = gestt;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getPlaceType() {

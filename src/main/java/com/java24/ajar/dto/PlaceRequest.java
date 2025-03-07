@@ -1,32 +1,67 @@
 package com.java24.ajar.dto;
 
-import com.java24.ajar.models.Address;
 import com.java24.ajar.models.AvailabilityPeriod;
 
 import java.util.ArrayList;
+import java.util.List;
 
-    public class PlaceRequest {
+public class PlaceRequest {
         private String name;
         private String description;
-        private Address address;
-        private ArrayList<String> imageUrl = new ArrayList<>();
-        private int capacity;
+
+        // address information this whould help me to filtring the places by the address info and the price range.
+        private  String steet;
+        private  String postalCode;
+        private  String city;
+        private  String country;
+    private double latitude;
+    private double longitude;
+
+
+    private List<String> imageUrl;
+        private int gest;
         private  int bedrooms;
         private double price;
         private ArrayList<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
         private String placeType;
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
-
-    public PlaceRequest(String placeName, String description, Address address, ArrayList<String> imageUrl, int capacity, int bedrooms, double price, ArrayList<AvailabilityPeriod> availabilityPeriods, String placeType) {
-        this.name = placeName;
+    public void setDescription(String description) {
         this.description = description;
-        this.address = address;
+    }
+
+    public List<String> getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(List<String> imageUrl) {
         this.imageUrl = imageUrl;
-        this.capacity = capacity;
+    }
+
+    public int getGest() {
+        return gest;
+    }
+
+    public void setGest(int gest) {
+        this.gest = gest;
+    }
+
+    public void setBedrooms(int bedrooms) {
         this.bedrooms = bedrooms;
+    }
+
+    public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setAvailabilityPeriods(ArrayList<AvailabilityPeriod> availabilityPeriods) {
         this.availabilityPeriods = availabilityPeriods;
+    }
+
+    public void setPlaceType(String placeType) {
         this.placeType = placeType;
     }
 
@@ -38,21 +73,22 @@ import java.util.ArrayList;
         return description;
     }
 
-    public Address getAddress() {
-        return address;
+
+    public double getLatitude() {
+        return latitude;
     }
 
-    public ArrayList<String> getImageUrl() {
-        return imageUrl;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-
-
-    public int getCapacity() {
-        return capacity;
+    public double getLongitude() {
+        return longitude;
     }
 
-
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public int getBedrooms() {
         return bedrooms;
@@ -74,6 +110,40 @@ import java.util.ArrayList;
     public String getPlaceType() {
         return placeType;
     }
+
+    public String getSteet() {
+        return steet;
+    }
+
+    public void setSteet(String steet) {
+        this.steet = steet;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+
 
 
 }

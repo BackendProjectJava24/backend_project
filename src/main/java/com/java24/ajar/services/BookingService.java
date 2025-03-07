@@ -197,7 +197,7 @@ public class BookingService implements BookingServiceImp {
             BookingItemDTO bookingItemDTO = new BookingItemDTO();
             bookingItemDTO.setName(place.getName());
             bookingItemDTO.setPrice(place.getPrice());
-            bookingItemDTO.setQuantity(place.getCapacity());
+            bookingItemDTO.setQuantity(place.getGestt());
             bookingItemDTO.setPlaceId(place.getId());
             bookingItemDTOS.add(bookingItemDTO);
         }
