@@ -38,6 +38,11 @@ public class UserService implements UserServiceImp {
         userRepository.save(user);
     }
 
+    @Override
+    public User findByUsername(String username) {
+        return null;
+    }
+
     // ✅ Find user by ID
     public User findById(String userId) {
         return userRepository.findById(userId)
@@ -49,8 +54,13 @@ public class UserService implements UserServiceImp {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    // ✅ Update user by userId
     @Override
+    public User updateUser(String username, User user) {
+        return null;
+    }
+
+    // ✅ Update user by userId
+
     public User updateUserById(String userId, UpdateUserDTO updateUserDTO) {
         User userToUpdate = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
