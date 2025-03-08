@@ -5,7 +5,6 @@ import com.java24.ajar.Repositories.PlaceRepository;
 import com.java24.ajar.Repositories.UserRepository;
 
 import com.java24.ajar.dto.BookingDTO;
-import com.java24.ajar.dto.BookingResponse;
 import com.java24.ajar.dto.BookingResponseDTO;
 import com.java24.ajar.exceptions.UnauthorizedException;
 import com.java24.ajar.models.AvailabilityPeriod;
@@ -22,7 +21,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -63,6 +62,8 @@ public class BookingService implements BookingServiceImp {
         if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
             throw new IllegalArgumentException("Place is not available for selected dates");
         }
+      placeRepository.save(updatPlaceAvailability(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
+
 
         // Validate guests count
         if (bookingDTO.getGuests() > place.getGestt()) {
@@ -127,35 +128,145 @@ public class BookingService implements BookingServiceImp {
     }
 
     @Override
-    public List<BookingResponseDTO> getAllBookings() {
+    public List<Booking> getAllBookings() {
         List<Booking> bookings = bookingRepository.findAll();
-        List<BookingResponseDTO> bookingResponseDTOs = new ArrayList<>();
-        for(Booking booking : bookings) {
-            BookingResponseDTO bookingResponseDTO = convertBookingToBookingDTO(booking);
-            bookingResponseDTOs.add(bookingResponseDTO);
-        }
-        return bookingResponseDTOs;
+
+
+        return bookings;
     }
 
     @Override
-    public List<BookingResponseDTO> getAllBookingsByCustomerId(String customerId) {
+    public List<Booking> getAllBookingsByCustomerId(String customerId) {
 List<Booking> bookings = bookingRepository.findByCustomerId(customerId);
 if (bookings.isEmpty() || bookings == null) {
     throw new NoSuchElementException("User is not authenticated");
 }
-List<BookingResponseDTO> bookingResponseDTOs = new ArrayList<>();
-for(Booking booking : bookings) {
-    BookingResponseDTO bookingResponseDTO = convertBookingToBookingDTO(booking);
-    bookingResponseDTOs.add(bookingResponseDTO);
-}
-if (bookingResponseDTOs.isEmpty() || bookingResponseDTOs == null) {
-    throw new NoSuchElementException("User is not authenticated");
-}
-        return bookingResponseDTOs;
+
+
+        return bookings;
     }
 
     @Override
-    public BookingResponseDTO getBookingById(String id) {
-        return null;
+    public Booking getBookingById(String id) {
+        Booking booking = bookingRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Booking not found"));
+
+        return booking;
+    }
+
+    @Override
+    public BookingResponseDTO updateBooking(String id, BookingDTO bookingDTO) {
+        User user = getCurrentAuthenticatedUser();
+
+        Place place = placeRepository.findById(bookingDTO.getPlaceId())
+                .orElseThrow(() -> new IllegalArgumentException("Place not found"));
+
+        // add the existted booked period to place avilability before edit it.
+     Place updatedPlace =  updatePlaceAvailability(place, id);
+
+        // Validate dates against availability
+        if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
+            throw new IllegalArgumentException("Place is not available for selected dates");
+        }
+
+        placeRepository.save(updatPlaceAvailability(updatedPlace, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
+
+        // Validate guests count
+        if (bookingDTO.getGuests() > place.getGestt()) {
+            throw new IllegalArgumentException("Number of guests exceeds place capacity");
+        }
+
+        // Calculate number of nights
+        long nights = ChronoUnit.DAYS.between(bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate());
+
+        // Calculate total amount
+        double totalAmount = nights * place.getPrice();
+
+        Booking bookingToUpdate = new Booking();
+        bookingToUpdate.setCustomer(user);
+        bookingToUpdate.setPlace(place);
+        bookingToUpdate.setCheckInDate(bookingDTO.getCheckInDate());
+        bookingToUpdate.setCheckOutDate(bookingDTO.getCheckOutDate());
+        bookingToUpdate.setGuests(bookingDTO.getGuests());
+        bookingToUpdate.setTotalAmount(totalAmount);
+        LocalDate creationDate = LocalDate.now();
+        bookingToUpdate.setCreatedAt(creationDate);
+
+        return convertBookingToBookingDTO(bookingRepository.save(bookingToUpdate));
+    }
+        private Place updatePlaceAvailability(Place place,String id) {
+            Booking booking = bookingRepository.findById(id).orElse(null);
+            if (booking != null) {
+                List<AvailabilityPeriod> existingPeriods = place.getAvailability();
+                AvailabilityPeriod existingPeriod = new AvailabilityPeriod();
+                existingPeriod.setStartDate(booking.getCheckInDate());
+                existingPeriod.setEndDate(booking.getCheckOutDate());
+                    existingPeriods.add(existingPeriod);
+                place.setAvailability(existingPeriods);
+            }
+        return place;
+    }
+
+    @Override
+    public String cancelBooking(String id) {
+        User user = getCurrentAuthenticatedUser();
+        Booking cencelBooking = bookingRepository.findById(id).orElse(null);
+        if (cencelBooking == null) {
+            throw new IllegalArgumentException("User is not authenticated");
+        }
+        // update the place availability before the canceling
+        placeRepository.save(updatePlaceAvailability(cencelBooking.getPlace(), id));
+
+        if (!cencelBooking.getCustomer().getUsername().equals(user.getUsername())) {
+            throw new IllegalArgumentException("You cant delete this place. You are not owner of this place");
+        }
+        bookingRepository.delete(cencelBooking);
+        return "Booking has been cancelled";
+    }
+
+    @Override
+    public List<Booking> getUserBookings() {
+        User user = getCurrentAuthenticatedUser();
+        List<Booking> bookings = bookingRepository.findByCustomer(user);
+        if (bookings.isEmpty() || bookings == null) {
+            throw new NoSuchElementException("User is not authenticated");
+        }
+        return bookings;
+    }
+
+    // this mehod do the update on the avilability list
+    private Place updatPlaceAvailability(Place place, LocalDate startDate, LocalDate endDate) {
+        // create a list to add the availability period before booking period and another after booking period
+        List<AvailabilityPeriod> newAvailabilityList = place.getAvailability();
+        // check if the booking poerid is included  in the availability period
+        List<AvailabilityPeriod> oldAvailabilityList = place.getAvailability();
+        AvailabilityPeriod availabilityPeriodToRemove = new AvailabilityPeriod();
+        AvailabilityPeriod availabilityPeriod1 = new AvailabilityPeriod();
+        AvailabilityPeriod availabilityPeriod2 = new AvailabilityPeriod();
+        for (AvailabilityPeriod oldAvailability : oldAvailabilityList) {
+
+           // the avilability period before booking period
+            availabilityPeriod1.setStartDate(oldAvailability.getStartDate());
+            availabilityPeriod1.setEndDate(startDate    .minus(1, ChronoUnit.DAYS));
+
+            // the avilability period after booking period
+            availabilityPeriod2.setStartDate(endDate);
+            availabilityPeriod2.setEndDate(oldAvailability.getEndDate());
+            availabilityPeriodToRemove = oldAvailability;
+        }
+        // remove the old avallability period
+        newAvailabilityList.remove(availabilityPeriodToRemove);
+
+        // check if the start date is not after the end date
+        if (availabilityPeriod1.getStartDate().isBefore(availabilityPeriod1.getEndDate())) {
+            newAvailabilityList.add(availabilityPeriod1);
+        }
+        if (availabilityPeriod2.getStartDate().isBefore(availabilityPeriod2.getEndDate())) {
+            newAvailabilityList.add(availabilityPeriod2);
+        }
+
+        // update the place details
+        place.setAvailability(newAvailabilityList);
+        return place;
     }
 }

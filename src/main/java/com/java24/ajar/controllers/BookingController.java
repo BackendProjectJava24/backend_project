@@ -42,8 +42,8 @@ public class BookingController {
 
     @GetMapping
     @PreAuthorize("hasRole(ADMIN)")
-    public ResponseEntity<List<BookingResponseDTO>> getAllBookings() {
-        List<BookingResponseDTO> bookings = bookingService.getAllBookings();
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> bookings = bookingService.getAllBookings();
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
@@ -51,23 +51,35 @@ public class BookingController {
 
     @GetMapping("/allBooking")
     public ResponseEntity<List<Booking>> gettAllBooking() {
-        List<Booking> bookings = bookingRepository.findAll();
+        List<Booking> bookings = bookingService.getAllBookings();
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
     @GetMapping("/findById/{id}")
-    public ResponseEntity<BookingResponseDTO> findBookingById(@PathVariable String id) {
-        BookingResponseDTO booking = bookingService.getBookingById(id);
+    public ResponseEntity<Booking> findBookingById(@PathVariable String id) {
+        Booking booking = bookingService.getBookingById(id);
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
     @GetMapping("/getUserBookings/{customerId}")
-    public ResponseEntity<List<BookingResponseDTO>> getUserBookingByAdmin(@RequestParam String customerId) {
-        List<BookingResponseDTO> bookings = bookingService.getAllBookingsByCustomerId(customerId);
+    public ResponseEntity<List<Booking>> getUserBookingByAdmin(@PathVariable String customerId) {
+        List<Booking> bookings = bookingService.getAllBookingsByCustomerId(customerId);
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
-//    @GetMapping("/getUserBooking")
-//    public ResponseEntity<List<Booking>> getUserBooking() {
-//        List<Booking> bookings = bookingService.getBookingsByUser();
-//        return new ResponseEntity<>(bookings, HttpStatus.OK);
-//    }
+    @GetMapping("/getUserBooking")
+    public ResponseEntity<List<Booking>> getUserBooking() {
+        List<Booking> bookings = bookingService.getUserBookings();
+        return new ResponseEntity<>(bookings, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteBooking/{id}")
+    public ResponseEntity<String> deleteBooking(@PathVariable String id) {
+        String message = bookingService.cancelBooking(id);
+        return new ResponseEntity<>(message, HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/updateBooking/{id}")
+    public ResponseEntity<BookingResponseDTO> updateBooking(@PathVariable String id,  @RequestBody BookingDTO booking) {
+        BookingResponseDTO bookingResponseDTO = bookingService.updateBooking(id, booking);
+        return new ResponseEntity<>(bookingResponseDTO, HttpStatus.CREATED);
+    }
 }

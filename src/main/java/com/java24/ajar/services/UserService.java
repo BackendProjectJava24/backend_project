@@ -102,14 +102,6 @@ public class UserService implements UserServiceImp{
 
 
 
-
-
-
-
-
-
-
-
         public User getCurrentAuthenticatedUser() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated() ||
