@@ -5,28 +5,34 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Document(collection = "bookings")
 public class Booking {
-@Id
+    @Id
     private String id;
 
-@DBRef
+    @DBRef
     private User customer;
-    private Double totalAmount;
-@DBRef
-private List<Place> items;
 
-private Map<String, Integer> quantities;
+    @DBRef
+    private Place place;  // Single place, not a list
+
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
+    private int guests;  // Number of people staying
+    private Double totalAmount;  // Calculated based on nights × price
+
     @CreatedDate
-    private Date createdAt;
+    private Date createdAt;  // MongoDB will auto-set this
 
-    public Booking() {
-    }
+    private List<Place> items;  // Fixed: Now declared
+    private Map<String, Integer> quantities;  // Fixed: Now declared
 
+    // ✅ Getters and Setters
     public String getId() {
         return id;
     }
@@ -43,36 +49,27 @@ private Map<String, Integer> quantities;
         this.customer = customer;
     }
 
-    public List<Place> getItems() {
-        return items;
+    public Place getPlace() {
+        return place;
     }
 
-    public void setItems(List<Place> items) {
-        this.items = items;
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public LocalDate getCheckInDate() {
+        return checkInDate;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCheckInDate(LocalDate checkInDate) {
+        this.checkInDate = checkInDate;
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
     }
 
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
+    public void setCheckOutDate(LocalDate checkOutDate) {
 
-    public Map<String, Integer> getQuantities() {
-        return quantities;
     }
-
-    public void setQuantities(Map<String, Integer> quantities) {
-        this.quantities = quantities;
-    }
-
 }
