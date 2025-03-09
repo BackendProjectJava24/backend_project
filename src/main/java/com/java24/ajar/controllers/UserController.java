@@ -1,9 +1,8 @@
 package com.java24.ajar.controllers;
 
 import com.java24.ajar.Repositories.UserRepository;
-import com.java24.ajar.dto.AuthRequest;
-import com.java24.ajar.dto.RegisterRequest;
 import com.java24.ajar.dto.RegisterResponse;
+import com.java24.ajar.dto.UpdateUserDTO;
 import com.java24.ajar.models.User;
 import com.java24.ajar.services.UserService;
 import jakarta.validation.Valid;
@@ -12,55 +11,60 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
-@Autowired
-private UserService userService;
-@Autowired
-private  UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
 
-
-
-
-    // update user
     @PatchMapping("/update/{userId}")
-    public ResponseEntity<?> userUpdate(@Valid @PathVariable String userID, @RequestBody RegisterRequest registerRequest) {
-        User usetToUpdate = userService.findById(userID);
+    public ResponseEntity<?> userUpdate(
+            @Valid @PathVariable String userId,
+            @RequestBody UpdateUserDTO updateUserDTO // Use UpdateUserDTO instead of RegisterRequest
+    ) {
+        // Find the user to update
+        User userToUpdate = userService.findById(userId);
+        if (userToUpdate == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
 
-        RegisterResponse response1 = new RegisterResponse(
+        // Update the user with the data from UpdateUserDTO
+        User updatedUser = userService.updateUserById(userId, updateUserDTO);
+
+        // Create a response object
+        RegisterResponse response = new RegisterResponse(
                 "User updated successfully",
-                registerRequest.getUsername(),
-                registerRequest.getRoles(),
-                registerRequest.getFirstName(),
-                registerRequest.getLastName(),
-                registerRequest.getEmail(),
-                registerRequest.getPhone(),
-                registerRequest.getAddress(),
-                registerRequest.getCreated_at()
+                updatedUser.getUsername(),
+                updatedUser.getRoles(),
+                updatedUser.getFirstName(),
+                updatedUser.getLastName(),
+                updatedUser.getEmail(),
+                updatedUser.getPhone(),
+                updatedUser.getAddress(),
+                updatedUser.getCreated_at()
         );
-        usetToUpdate.setRoles(registerRequest.getRoles());
-        usetToUpdate.setPassword(registerRequest.getPassword());
-        usetToUpdate.setFirstName(registerRequest.getFirstName());
-        usetToUpdate.setLastName(registerRequest.getLastName());
-        usetToUpdate.setEmail(registerRequest.getEmail());
-        usetToUpdate.setPhone(registerRequest.getPhone());
-        usetToUpdate.setAddress(registerRequest.getAddress());
-        usetToUpdate.setCreated_at(registerRequest.getCreated_at());
-        userService.updateUser(userID, usetToUpdate);
-        return ResponseEntity.status(HttpStatus.OK).body(response1);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity<?> deleteUser(@Valid @PathVariable String username, @RequestBody AuthRequest authRequest) {
-        String Userid;
-        RegisterRequest user = userId;
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<?> deleteUser(@Valid @PathVariable String userId) {
+        // Find the user to delete
+        User user = userService.findById(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // Delete the user
+        userService.deleteUser(userId);
+
+        // Create a response object
         RegisterResponse response = new RegisterResponse(
-                "user deleted successfully.",
+                "User deleted successfully.",
                 user.getUsername(),
                 user.getRoles(),
                 user.getFirstName(),
@@ -70,7 +74,7 @@ private  UserRepository userRepository;
                 user.getAddress(),
                 user.getCreated_at()
         );
-        userService.deleteUser(username);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

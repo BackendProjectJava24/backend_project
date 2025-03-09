@@ -18,10 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +36,7 @@ public class BookingService implements BookingServiceImp {
 //     skapa en ny order
 //     byter typ när vi gjort OrderResponseDTO från Order
 
-//    public BookingResponseDTO createBooking(BookingDTO bookingDTO) {
+    //    public BookingResponseDTO createBooking(BookingDTO bookingDTO) {
 //
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
@@ -75,7 +72,7 @@ public class BookingService implements BookingServiceImp {
 //
 //        return converToBookingResponseDTO(savedBooking);
 //    }
-@Override
+    @Override
     public List<BookingResponse> getAllBookings() {
         List<Booking> bookings = bookingRepository.findAll();
 
@@ -117,7 +114,7 @@ public class BookingService implements BookingServiceImp {
         if (booking == null) {
             throw new UnauthorizedException("User is not any booking");
         }
-         return   converToBookingResponseDTO1(booking);
+        return   converToBookingResponseDTO1(booking);
     }
 
 
@@ -194,10 +191,11 @@ public class BookingService implements BookingServiceImp {
 
         Map<String, String> quantities = booking.getQuantities().entrySet().stream()
                 .collect(Collectors.toMap(
-                        entry -> entry.getKey(),
-                        entry -> placeRepository.findById(entry.getKey())
-                                .map(Place::getName)
-                                .orElse("Product not found")
+                        entry -> entry.getKey(), // Key remains the same
+                        entry -> {
+                            Optional<Place> placeOptional = placeRepository.findById(entry.getKey());
+                            return placeOptional.map(Place::getName).orElse("Product not found");
+                        }
                 ));
         return new BookingResponseDTO(
                 booking.getId(),

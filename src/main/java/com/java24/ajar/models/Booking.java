@@ -72,4 +72,31 @@ public class Booking {
     public void setCheckOutDate(LocalDate checkOutDate) {
 
     }
+
+    public void setTotalAmount(double totalAmount) {
+    }
+
+    public void setQuantities(Map<String, Integer> quantities) {
+
+    }
+
+    public void setItems(List<Place> places) {
+
+    }
+
+    public List<Place> getItems() {
+                    return null;
+    }
+
+    public <K> Map<K, Integer> getQuantities() {
+            return null;
+    }
+
+    public double getTotalAmount() {
+            return 0;
+    }
+
+    public Object getCreatedAt() {
+        return null;
+    }
 }

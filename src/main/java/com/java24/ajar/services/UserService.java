@@ -60,7 +60,7 @@ public class UserService implements UserServiceImp {
     }
 
     // ✅ Update user by userId
-
+    @Override
     public User updateUserById(String userId, UpdateUserDTO updateUserDTO) {
         User userToUpdate = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
