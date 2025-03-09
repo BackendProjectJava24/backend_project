@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
+
 
 public interface PlaceRepository extends MongoRepository<Place, String> {
 
-    // ✅ Fixed: Added Pageable for pagination support
+
     Page<Place> findByCityAndPriceBetween(
             String city,
             BigDecimal minPrice,

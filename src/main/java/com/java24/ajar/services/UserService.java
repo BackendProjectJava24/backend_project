@@ -2,7 +2,7 @@ package com.java24.ajar.services;
 
 import com.java24.ajar.dto.UpdateUserDTO;
 import com.java24.ajar.Repositories.UserRepository;
-import com.java24.ajar.models.Role;  // ✅ Added missing import
+import com.java24.ajar.models.Role;
 import com.java24.ajar.models.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +32,7 @@ public class UserService implements UserServiceImp {
 
         // Ensure user has at least a default role
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            user.setRoles(Set.of(Role.USER)); // ✅ Fixed missing Role import
+            user.setRoles(Set.of(Role.USER)); 
         }
 
         userRepository.save(user);
@@ -54,7 +54,7 @@ public class UserService implements UserServiceImp {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    @Override
+
     public User updateUser(String username, User user) {
         return null;
     }
