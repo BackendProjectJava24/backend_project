@@ -34,8 +34,8 @@ public class BookingController {
 
 
     @PostMapping
-    public ResponseEntity<BookingResponseDTO> addBooking(@RequestBody BookingDTO booking) {
-        BookingResponseDTO saBooking = bookingService.createBooking(booking);
+    public ResponseEntity<Booking> addBooking(@RequestBody BookingDTO booking) {
+        Booking saBooking = bookingService.createBooking(booking);
         return new ResponseEntity<>(saBooking, HttpStatus.CREATED);
     }
 
@@ -78,8 +78,8 @@ public class BookingController {
     }
 
     @PatchMapping("/updateBooking/{id}")
-    public ResponseEntity<BookingResponseDTO> updateBooking(@PathVariable String id,  @RequestBody BookingDTO booking) {
-        BookingResponseDTO bookingResponseDTO = bookingService.updateBooking(id, booking);
+    public ResponseEntity<Booking> updateBooking(@PathVariable String id,  @RequestBody BookingDTO booking) {
+        Booking bookingResponseDTO = bookingService.updateBooking(id, booking);
         return new ResponseEntity<>(bookingResponseDTO, HttpStatus.CREATED);
     }
 }

@@ -54,7 +54,7 @@ public class PlaceService implements PlaceServiceImp {
 
         // add the addres information to database
         // chek the addres field are not null
-        validateAddress(placeRequest);
+        validatePlace(placeRequest);
         newPlace.setSteet(placeRequest.getSteet());
         newPlace.setPostalCode(placeRequest.getPostalCode());
         newPlace.setCity(placeRequest.getCity());
@@ -131,7 +131,7 @@ public class PlaceService implements PlaceServiceImp {
         placeToUpdate.setDescription(placeRequest.getDescription());
         // address information
         // chek the addres field are not null
-        validateAddress(placeRequest);
+        validatePlace(placeRequest);
         placeToUpdate.setSteet(placeRequest.getSteet());
         placeToUpdate.setPostalCode(placeRequest.getPostalCode());
         placeToUpdate.setCity(placeRequest.getCity());
@@ -155,7 +155,7 @@ public class PlaceService implements PlaceServiceImp {
 
         // update the place
         placeRepository.save(placeToUpdate);
-        return  convertToPlaceResponse(placeToUpdate);
+        return convertToPlaceResponse(placeToUpdate);
     }
 
     @Override
@@ -190,33 +190,32 @@ public class PlaceService implements PlaceServiceImp {
     //  fing the all availability  places in the database it should help me to do the filter by the different options
     @Override
     public List<Place> findAvailablePlaces(LocalDate startDate, LocalDate endDate) {
-        List<Place> allPlaces = placeRepository.findAll();
+        // endate don't have before start date
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("startDate and endDate cannot be null");
+        }
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("startDate cannot be after endDate");
+        }
+        List<Place> places = placeRepository.findAll();
 
-//        if (allPlaces.isEmpty() || allPlaces == null || allPlaces.isEmpty()) {
-//            throw new RuntimeException("there are no places in the database");
-//        }
-        List<Place> availabledPlaces = new ArrayList<>();
-        for (Place place : allPlaces) {
-            List<AvailabilityPeriod> availabilityPeriod = place.getAvailability();
-            for (AvailabilityPeriod period : availabilityPeriod) {
-                if (startDate.isEqual(period.getStartDate()) || startDate.isAfter(period.getStartDate())
-                        || endDate.isEqual(period.getEndDate()) || endDate.isBefore(period.getEndDate())) {
-                    availabledPlaces.add(place);
-                }
+        if (places == null || places.isEmpty()) {
+            throw new IllegalArgumentException("there are no places in the database");
+        }
+        List<Place> tempPlaces = new ArrayList<>();
+        for (Place place : places) {
+            if (isPlaceAvailable(place, startDate, endDate)) {
+                tempPlaces.add(place);
             }
         }
-//        if (availabledPlaces.isEmpty() || availabledPlaces == null) {
-//            throw new RuntimeException("there are no places in the database");
-//        }
-        return availabledPlaces;
-
-
-//        return allPlaces.stream()
-//                .filter(place -> isPlaceAvailable(place, startDate, endDate))
-//                .collect(Collectors.toList());
-
-
+        places.clear();
+        places.addAll(tempPlaces);
+        if (tempPlaces.isEmpty()) {
+            throw new IllegalArgumentException("there are no places that match in this period.");
+        }
+        return places;
     }
+
 
     @Override
     public List<Place> findPlacesByPraceRange(Double minPrice, Double maxPrice) {
@@ -235,19 +234,25 @@ public class PlaceService implements PlaceServiceImp {
 
     // This method is linked to  findAvailablePlaces method.
     private boolean isPlaceAvailable(Place place, LocalDate startDate, LocalDate endDate) {
-        if (place.getAvailability() == null || place.getAvailability().isEmpty()) {
-            return false; // Place has no availability periods defined
+        List<AvailabilityPeriod> existingPeriods = place.getAvailability();
+        boolean isAvailable = false;
+        for (AvailabilityPeriod existingPeriod : existingPeriods) {
+            LocalDate startDateAvailable = existingPeriod.getStartDate();
+            LocalDate endDateAvailable = existingPeriod.getEndDate();
+            if ((startDate.isEqual(startDateAvailable) || startDate.isAfter(startDateAvailable) && startDate.isBefore(endDate))
+                    && (endDate.isEqual(endDateAvailable) || endDate.isBefore(endDateAvailable))) {
+                //  overlaps found
+                isAvailable = true;  // the place is not avaible
+            }
         }
-        return place.getAvailability().stream()
-                .anyMatch(period ->
-                        (startDate.isEqual(period.getStartDate()) || startDate.isAfter(period.getStartDate())) &&
-                                (endDate.isEqual(period.getEndDate()) || endDate.isBefore(period.getEndDate()))
-                );
+        //  overlaps found
+        return isAvailable; // Place is available
     }
 
-
-    private void validateAddress(PlaceRequest placeRequest) {
-
+    private void validatePlace(PlaceRequest placeRequest) {
+        if (placeRequest.getName() == null || placeRequest.getName().isEmpty()) {
+            throw new IllegalArgumentException("Place name cannot be empty");
+        }
         if (placeRequest.getCity() == null || placeRequest.getCity().isEmpty()) {
             throw new IllegalArgumentException("Place city is required");
         }
@@ -260,9 +265,18 @@ public class PlaceService implements PlaceServiceImp {
         if (placeRequest.getSteet() == null || placeRequest.getSteet().isEmpty()) {
             throw new IllegalArgumentException("Place street is required");
         }
+        if (placeRequest.getGest() < 0){
+            throw new IllegalArgumentException("Place guest cannot be negative or zero");
+        }
+        if (placeRequest.getBedrooms() < 0){
+            throw new IllegalArgumentException("Place bedrooms cannot be required or zero");
+        }
+        if (placeRequest.getPrice() <= 0){
+            throw new IllegalArgumentException("Place price cannot be negative or zero");
+        }
     }
 
-// find all the place in a city
+    // find all the place in a city
     @Override
     public List<Place> searchByCity(String city) {
         if (city == null || city.isEmpty()) {
@@ -275,17 +289,17 @@ public class PlaceService implements PlaceServiceImp {
         return cityPlaces;
     }
 
-    private List<AvailabilityPeriod> validateAvailabilityPeriod(List<AvailabilityPeriod> availabilityPeriod ) {
+    private List<AvailabilityPeriod> validateAvailabilityPeriod(List<AvailabilityPeriod> availabilityPeriod) {
 
         List<AvailabilityPeriod> newPeriods = new ArrayList<>();
         for (AvailabilityPeriod period : availabilityPeriod) {
-            if (period.getStartDate().isAfter(period.getEndDate())){
+            if (period.getStartDate().isAfter(period.getEndDate())) {
                 throw new IllegalArgumentException("Start date cannot be after end date");
             }
-            if (period.getStartDate().isAfter(period.getEndDate())){
+            if (period.getStartDate().isAfter(period.getEndDate())) {
                 throw new IllegalArgumentException("Start date cannot be before end date");
             }
-            if (period.getStartDate().isBefore(LocalDate.now()) || period.getEndDate().isBefore(LocalDate.now())){
+            if (period.getStartDate().isBefore(LocalDate.now()) || period.getEndDate().isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Start date or end date cannot be in the pass");
             }
             for (AvailabilityPeriod newPeriod : newPeriods) {

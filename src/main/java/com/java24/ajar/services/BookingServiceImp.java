@@ -9,14 +9,14 @@ import com.java24.ajar.models.Booking;
 import java.util.List;
 
 public interface BookingServiceImp {
-     BookingResponseDTO createBooking(BookingDTO bookingDTO);
+     Booking createBooking(BookingDTO bookingDTO);
      List<Booking> getAllBookings();
      // get all user's booking
     List<Booking> getAllBookingsByCustomerId(String customerId);
 // get a booking by id
 Booking getBookingById(String id);
 
-BookingResponseDTO updateBooking(String id, BookingDTO bookingDTO);
+Booking updateBooking(String id, BookingDTO bookingDTO);
 
 String cancelBooking(String id);
 

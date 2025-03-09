@@ -1,6 +1,8 @@
 package com.java24.ajar.models;
 
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,14 +15,22 @@ import java.util.List;
 public class Place {
     @Id
     private String id;
+    @NotNull(message = "please rype the the name of place.")
+    @NotEmpty(message = "name field cannot be empty")
     private String name;
     private String description;
     // address information this whould help me to filtring the places by the address info and the price range.
+    @NotNull(message = "please write the addres pf place.")
     private  String steet;
+    @NotNull(message = "please write the addres pf place.")
     private  String postalCode;
+    @NotNull(message = "please write the addres pf place.")
     private  String city;
+    @NotNull(message = "please write the addres pf place.")
     private  String country;
+    @NotNull(message = "please write the addres pf place.")
     private double latitude;
+    @NotNull(message = "please write the addres pf place.")
     private double longitude;
 
     private List<String> imageURL;

@@ -1,9 +1,17 @@
 package com.java24.ajar.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class UserUpdateRequest {
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
+    @Email
+    @NotBlank
     private String email;
+    @NotBlank
     private String phone;
 
     public UserUpdateRequest() {
