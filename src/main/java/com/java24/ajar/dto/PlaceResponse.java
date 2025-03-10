@@ -1,7 +1,9 @@
 package com.java24.ajar.dto;
 
-import com.java24.ajar.models.Address;
+
 import com.java24.ajar.models.AvailabilityPeriod;
+import jakarta.validation.constraints.NegativeOrZero;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 
 
@@ -9,22 +11,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceResponse {
+    @NotNull(message = "please rype the the name of place.")
     private String placeName;
     private String description;
 
     // address information this whould help me to filtring the places by the address info and the price range.
+    @NotNull(message = "please write the addres pf place.")
     private  String steet;
+    @NotNull(message = "please write the addres pf place.")
     private  String postalCode;
+    @NotNull(message = "please write the addres pf place.")
     private  String city;
+    @NotNull(message = "please write the addres pf place.")
     private  String country;
+    @NotNull(message = "please write the addres pf place.")
     private double latitude;
+    @NotNull(message = "please write the addres pf place.")
     private double longitude;
 
 
     private List<String> imageUrl ;
+    @NegativeOrZero(message = "gues cannot be negative or zero. Please write right guest")
     private int gestt;
+    @NegativeOrZero(message = "bedroom cannot be negative or zero. Please write right bedroom")
     private  int bedrooms;
+    @NegativeOrZero(message = "plice cannot be negative or zero. Please write right price")
     private double price;
+    @NotNull(message = "add avalilability period")
     private List<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
     private String placeType;
 

@@ -52,7 +52,7 @@ public class BookingService implements BookingServiceImp {
 
 
     @Override
-    public BookingResponseDTO createBooking(BookingDTO bookingDTO) {
+    public Booking createBooking(BookingDTO bookingDTO) {
         User user = getCurrentAuthenticatedUser();
 
         Place place = placeRepository.findById(bookingDTO.getPlaceId())
@@ -86,7 +86,7 @@ public class BookingService implements BookingServiceImp {
         LocalDate creationDate = LocalDate.now();
         newBooking.setCreatedAt(creationDate);
 
-        return convertBookingToBookingDTO(bookingRepository.save(newBooking));
+        return bookingRepository.save(newBooking);
     }
 
     // get only the definded information
@@ -155,12 +155,17 @@ if (bookings.isEmpty() || bookings == null) {
     }
 
     @Override
-    public BookingResponseDTO updateBooking(String id, BookingDTO bookingDTO) {
+    public Booking updateBooking(String id, BookingDTO bookingDTO) {
         User user = getCurrentAuthenticatedUser();
 
         Place place = placeRepository.findById(bookingDTO.getPlaceId())
                 .orElseThrow(() -> new IllegalArgumentException("Place not found"));
-
+        // check if the user want change the place then he has to cancel this booking and do a new bookin by the new place
+//        Booking booking = bookingRepository.findById(id).orElseThrow(
+//                () -> new NoSuchElementException("Booking not found"));
+//        if (!booking.getPlace().equals(place)) {
+//            throw new IllegalArgumentException("Places do not match. Please cancel the booking and do a new bookin by the new place.");
+//        }
         // add the existted booked period to place avilability before edit it.
      Place updatedPlace =  updatePlaceAvailability(place, id);
 
@@ -192,8 +197,9 @@ if (bookings.isEmpty() || bookings == null) {
         LocalDate creationDate = LocalDate.now();
         bookingToUpdate.setCreatedAt(creationDate);
 
-        return convertBookingToBookingDTO(bookingRepository.save(bookingToUpdate));
+        return bookingRepository.save(bookingToUpdate);
     }
+    // this method is use in update and delete method and id return the the booked period to availability period.
         private Place updatePlaceAvailability(Place place,String id) {
             Booking booking = bookingRepository.findById(id).orElse(null);
             if (booking != null) {
@@ -234,7 +240,7 @@ if (bookings.isEmpty() || bookings == null) {
         return bookings;
     }
 
-    // this mehod do the update on the avilability list
+    // this mehod do the update on the avilability list and is is used in create a new booking method
     private Place updatPlaceAvailability(Place place, LocalDate startDate, LocalDate endDate) {
         // create a list to add the availability period before booking period and another after booking period
         List<AvailabilityPeriod> newAvailabilityList = place.getAvailability();

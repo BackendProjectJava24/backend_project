@@ -4,7 +4,9 @@ import com.java24.ajar.dto.PlaceRequest;
 import com.java24.ajar.dto.PlaceResponse;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.services.PlaceServiceImp;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class PlaceController {
     private PlaceServiceImp placeServiceImp;
 
     @PostMapping("/newplace")
-    public ResponseEntity<Place> addNewPlace(@RequestBody PlaceRequest placeRequest) {
+    public ResponseEntity<Place> addNewPlace(@Valid @RequestBody PlaceRequest placeRequest) {
         Place  placeResponse = placeServiceImp.createPlace(placeRequest);
         return new ResponseEntity<>(placeResponse, HttpStatus.CREATED);
     }
@@ -40,7 +42,7 @@ public class PlaceController {
 
 
     @PatchMapping("/updateplace/{id}")
-    public ResponseEntity<PlaceResponse> updatePlace(@PathVariable String id, @RequestBody PlaceRequest placeRequest) {
+    public ResponseEntity<PlaceResponse> updatePlace(@Valid @PathVariable String id, @RequestBody PlaceRequest placeRequest) {
         PlaceResponse place = placeServiceImp.updatePlace(id, placeRequest);
         return new ResponseEntity<>(place, HttpStatus.OK);
     }
