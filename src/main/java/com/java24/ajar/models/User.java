@@ -34,6 +34,9 @@ public class User {
     private String phone;
     private String address;
     private List<Booking> bookingList;
+
+
+
     private String created_at;
 
     public User(String id, String username, String password, Set<Role> roles, String firstName, String lastName, String email, String phone, String address, String created_at) {
@@ -131,5 +134,13 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Booking> getBookingList() {
+        return bookingList;
+    }
+
+    public void setBookingList(List<Booking> bookingList) {
+        this.bookingList = bookingList;
     }
 }

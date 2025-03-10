@@ -1,6 +1,7 @@
 package com.java24.ajar.controllers;
 
 import com.java24.ajar.dto.PlaceRequest;
+import com.java24.ajar.dto.PlaceResponse;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.services.PlaceServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,9 @@ public class PlaceController {
     private PlaceServiceImp placeServiceImp;
 
     @PostMapping("/newplace")
-    public ResponseEntity<Place> addNewPlace(@RequestBody PlaceRequest placeRequest) {
-        Place place = placeServiceImp.createPlace(placeRequest);
-        return new ResponseEntity<>(place, HttpStatus.CREATED);
+    public ResponseEntity<PlaceResponse> addNewPlace(@RequestBody PlaceRequest placeRequest) {
+        PlaceResponse placeResponse = placeServiceImp.createPlace(placeRequest);
+        return new ResponseEntity<>(placeResponse, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -33,8 +34,8 @@ public class PlaceController {
 
 
     @PatchMapping("/updateplace/{id}")
-    public ResponseEntity<Place> updatePlace(@PathVariable String id, @RequestBody PlaceRequest placeRequest) {
-        Place place = placeServiceImp.updatePlace(id, placeRequest);
+    public ResponseEntity<PlaceResponse> updatePlace(@PathVariable String id, @RequestBody PlaceRequest placeRequest) {
+        PlaceResponse place = placeServiceImp.updatePlace(id, placeRequest);
         return new ResponseEntity<>(place, HttpStatus.OK);
     }
 

@@ -1,5 +1,3 @@
-
-
 package com.java24.ajar.controllers;
 
 import com.java24.ajar.models.User;

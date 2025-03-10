@@ -1,5 +1,5 @@
-
 package com.java24.ajar.controllers;
+
 
 import com.java24.ajar.Repositories.BookingRepository;
 import com.java24.ajar.Repositories.UserRepository;
@@ -26,14 +26,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
-public class bookingController {
-    private static final Logger log = LoggerFactory.getLogger(bookingController.class);
+public class BookingController {
+    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
     private final BookingService bookingService;
     @Autowired
     private final BookingRepository bookingRepository;
     private UserRepository userRepository;
 
-    public bookingController(BookingService bookingService, BookingRepository bookingRepository) {
+
+    public BookingController(BookingService bookingService, BookingRepository bookingRepository) {
         this.bookingService = bookingService;
         this.bookingRepository = bookingRepository;
     }
@@ -43,6 +44,7 @@ public class bookingController {
     public ResponseEntity<BookingResponseDTO> addBooking(@RequestBody BookingDTO booking) {
         BookingResponseDTO saBooking = bookingService.createBooking(booking);
         return new ResponseEntity<>(saBooking, HttpStatus.CREATED);
+
 
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
@@ -76,6 +78,7 @@ public class bookingController {
 //        return  new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
 
 
+
     }
 
 
@@ -99,6 +102,19 @@ public class bookingController {
         return new ResponseEntity<>(booking, HttpStatus.OK);
     }
 
+
+    @GetMapping("/getUserBookings/{customerId}")
+    public ResponseEntity<List<Booking>> getUserBookingByAdmin(@PathVariable String customerId) {
+
+        List<Booking> bookings = bookingService.getAllBookingsByCustomerId(customerId);
+        return new ResponseEntity<>(bookings, HttpStatus.OK);
+    }
+    @GetMapping("/getUserBooking")
+    public ResponseEntity<List<Booking>> getUserBooking() {
+        List<Booking> bookings = bookingService.getBookingsByUser();
+        return new ResponseEntity<>(bookings, HttpStatus.OK);
+    }
+
     @GetMapping("/getUserBookings/{id}")
     @PreAuthorize("hasRole(USER)")
     public ResponseEntity<List<BookingResponseDTO>> getUserBookingByAdmin(@PathVariable String id) {
@@ -118,8 +134,4 @@ public class bookingController {
         }
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
-
-
-
-
 }

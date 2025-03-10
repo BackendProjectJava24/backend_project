@@ -1,20 +1,23 @@
 package com.java24.ajar.dto;
 
+import com.java24.ajar.models.Address;
 import com.java24.ajar.models.AvailabilityPeriod;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaceResponse {
     private String ownerId;
     private String placeName;
     private String description;
-    private String[] address = new String[2];
-    private ArrayList<String> imageUrl = new ArrayList<>();
+   private Address  address;
+    private List<String> imageUrl ;
     private int capacity;
     private  int bedrooms;
     private double price;
-    private ArrayList<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
+    private List<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
     private String placeType;
 
     public String getOwnerId() {
@@ -41,19 +44,20 @@ public class PlaceResponse {
         this.description = description;
     }
 
-    public String[] getAddress() {
+
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String[] address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
-    public ArrayList<String> getImageUrl() {
+    public List<String> getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(ArrayList<String> imageUrl) {
+    public void setImageUrl(List<String> imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -81,11 +85,11 @@ public class PlaceResponse {
         this.price = price;
     }
 
-    public ArrayList<AvailabilityPeriod> getAvailabilityPeriods() {
+    public List<AvailabilityPeriod> getAvailabilityPeriods() {
         return availabilityPeriods;
     }
 
-    public void setAvailabilityPeriods(ArrayList<AvailabilityPeriod> availabilityPeriods) {
+    public void setAvailabilityPeriods(List<AvailabilityPeriod> availabilityPeriods) {
         this.availabilityPeriods = availabilityPeriods;
     }
 

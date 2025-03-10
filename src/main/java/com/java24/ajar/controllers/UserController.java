@@ -1,9 +1,7 @@
 package com.java24.ajar.controllers;
 
 import com.java24.ajar.Repositories.UserRepository;
-import com.java24.ajar.dto.AuthRequest;
-import com.java24.ajar.dto.RegisterRequest;
-import com.java24.ajar.dto.RegisterResponse;
+import com.java24.ajar.dto.*;
 import com.java24.ajar.models.User;
 import com.java24.ajar.services.UserService;
 import jakarta.validation.Valid;
@@ -31,34 +29,15 @@ private  UserRepository userRepository;
 
 
     // update user
-    @PatchMapping("/update/{username}")
-    public ResponseEntity<?> userUpdate(@Valid @PathVariable String username, @RequestBody RegisterRequest registerRequest) {
-        User usetToUpdate = userService.findByUsername(username);
-
-        RegisterResponse response1 = new RegisterResponse(
-                "User updated successfully",
-                registerRequest.getUsername(),
-                registerRequest.getRoles(),
-                registerRequest.getFirstName(),
-                registerRequest.getLastName(),
-                registerRequest.getEmail(),
-                registerRequest.getPhone(),
-                registerRequest.getAddress(),
-                registerRequest.getCreated_at()
-        );
-        usetToUpdate.setRoles(registerRequest.getRoles());
-        usetToUpdate.setPassword(registerRequest.getPassword());
-        usetToUpdate.setFirstName(registerRequest.getFirstName());
-        usetToUpdate.setLastName(registerRequest.getLastName());
-        usetToUpdate.setEmail(registerRequest.getEmail());
-        usetToUpdate.setPhone(registerRequest.getPhone());
-        usetToUpdate.setAddress(registerRequest.getAddress());
-        usetToUpdate.setCreated_at(registerRequest.getCreated_at());
-        userService.updateUser(username, usetToUpdate);
-        return ResponseEntity.status(HttpStatus.OK).body(response1);
+    @PatchMapping("/userUpdate")
+    public ResponseEntity<UserUpdateResponse> updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest) {
+        UserUpdateResponse userUpdateResponse = userService.updateUser(userUpdateRequest);
+        return new ResponseEntity<>(userUpdateResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{username}")
+
+
+    @DeleteMapping("/userDelete/{username}")
     public ResponseEntity<?> deteteUser(@Valid @PathVariable String username, @RequestBody AuthRequest authRequest) {
         User user = userService.findByUsername(username);
         RegisterResponse response = new RegisterResponse(

@@ -1,13 +1,14 @@
 package com.java24.ajar.models;
 
 
+import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Set;
+
 
 @Document(collection = "places")
 public class Place {
@@ -15,7 +16,7 @@ public class Place {
     private String id;
     private String name;
     private String description;
-    private String[] address = new String[3];
+    private Address address;
     private List<String> imageURL;
     private int capacity;
     private int bedroom;
@@ -60,14 +61,13 @@ public class Place {
         this.description = description;
     }
 
-    public String[] getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String[] address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
-
     public List<String> getImageURL() {
         return imageURL;
     }
@@ -115,8 +115,6 @@ public class Place {
     public void setOwnerID(User ownerID) {
         this.ownerID = ownerID;
     }
-
-
 
 
 }
