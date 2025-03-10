@@ -56,21 +56,16 @@ public class UserService implements UserServiceImp{
 
     // update a user informantion
     public UserUpdateResponse updateUser(UserUpdateRequest userUpdateRequest) {
-        User existingUser = getCurrentAuthenticatedUser();
-        User updatedUser = new User();
+        User updatedUser = getCurrentAuthenticatedUser();
+
 
         updatedUser.setEmail(userUpdateRequest.getEmail());
         updatedUser.setFirstName(userUpdateRequest.getFirstName());
         updatedUser.setLastName(userUpdateRequest.getLastName());
         updatedUser.setPhone(userUpdateRequest.getPhone());
+        updatedUser.setAddress(userUpdateRequest.getAddress());
 
-        updatedUser.setId(existingUser.getId());
-        updatedUser.setRoles(existingUser.getRoles());
-        updatedUser.setPassword(existingUser.getPassword());
-        updatedUser.setBookingList(existingUser.getBookingList());
-
-        userRepository.save(updatedUser);
-        return  convertUserToUserUpdateResponse(updatedUser);
+        return  convertUserToUserUpdateResponse(userRepository.save(updatedUser));
     }
 
 
@@ -82,6 +77,7 @@ public class UserService implements UserServiceImp{
         userUpdateResponse.setFirstName(user.getFirstName());
         userUpdateResponse.setLastName(user.getLastName());
         userUpdateResponse.setPhone(user.getPhone());
+        userUpdateResponse.setAddress(user.getAddress());
         return userUpdateResponse;
     }
 

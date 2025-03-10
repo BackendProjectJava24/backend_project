@@ -33,7 +33,6 @@ public class User {
     private String email;
     private String phone;
     private String address;
-    private List<Booking> bookingList;
 
 
 
@@ -136,11 +135,5 @@ public class User {
         this.roles = roles;
     }
 
-    public List<Booking> getBookingList() {
-        return bookingList;
-    }
 
-    public void setBookingList(List<Booking> bookingList) {
-        this.bookingList = bookingList;
-    }
 }
