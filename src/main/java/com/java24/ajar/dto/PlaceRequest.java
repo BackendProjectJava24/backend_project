@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class PlaceRequest {
     private String name;
     private String description;
-    private String[] address = new String[2];
+    private String address;
     private ArrayList<String> imageUrl = new ArrayList<>();
     private int capacity;
     private  int bedrooms;
@@ -17,7 +17,7 @@ public class PlaceRequest {
 
 
 
-    public PlaceRequest(String placeName, String description, String[] address, ArrayList<String> imageUrl, int capacity, int bedrooms, double price, ArrayList<AvailabilityPeriod> availabilityPeriods, String placeType) {
+    public PlaceRequest(String placeName, String description, String address, ArrayList<String> imageUrl, int capacity, int bedrooms, double price, ArrayList<AvailabilityPeriod> availabilityPeriods, String placeType) {
         this.name = placeName;
         this.description = description;
         this.address = address;
@@ -38,10 +38,6 @@ public class PlaceRequest {
     }
 
 
-
-    public String[] getAddress() {
-        return address;
-    }
 
 
 
@@ -79,4 +75,7 @@ public class PlaceRequest {
     }
 
 
+    public String getAddress() {
+        return address;
+    }
 }
