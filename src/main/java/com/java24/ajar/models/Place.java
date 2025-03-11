@@ -24,6 +24,7 @@ public class Place {
     @DBRef
     private User ownerID;
     private String placeType;
+    private int guest;
 
     public String getPlaceType() {
         return placeType;
@@ -116,7 +117,12 @@ public class Place {
         this.ownerID = ownerID;
     }
 
+    public int getGuest() {
+        int guest;
+        return guest = 0;
+    }
 
-
-
+    public void setGuest(int guest) {
+        this.guest = guest;
+    }
 }

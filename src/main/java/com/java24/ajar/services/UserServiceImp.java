@@ -11,6 +11,9 @@ public interface UserServiceImp {
     User findById(String userId); // ✅ Changed to use userId instead of username
     boolean existsByUsername(String username);
 
+    // ✅ Update user
+    User updateUser(String username, User user);
+
     // Removed updateUserDTO
     User updateUserById(String userId, UpdateUserDTO updateUserDTO); // ✅ Changed method signature to match implementation
     void deleteUser(String userId); // ✅ Changed username to userId for consistency

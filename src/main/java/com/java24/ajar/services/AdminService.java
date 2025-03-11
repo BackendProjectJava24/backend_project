@@ -27,4 +27,6 @@ public class AdminService implements AdminServiceImp {
         return users;
     }
 
+    public void deleteUser(String adminId) {
+    }
 }

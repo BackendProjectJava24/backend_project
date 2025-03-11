@@ -99,4 +99,19 @@ public class Booking {
     public Object getCreatedAt() {
         return null;
     }
+
+ 
+    public int getGuests() {
+        return guests; // ✅ Return the correct value
+    }
+
+    public void getCreatedAt(String createdAt) {
+
+    }
+
+    public void setCreatedAt(String s) {
+    }
+
+    public void setGuests(int guests) {
+    }
 }

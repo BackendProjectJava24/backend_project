@@ -1,5 +1,8 @@
 package com.java24.ajar.dto;
 
+import com.java24.ajar.models.Place;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -70,5 +73,27 @@ public class BookingResponseDTO {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setBookedPlace(Place place) {
+    }
+    private int guests; // ✅ Ensure this field exists
+
+    public int getGuests() {  // ✅ Now correctly returns the guests count
+        return guests;
+    }
+    public void setGuests(int guests) {
+        this.guests = guests;
+    }
+
+
+    public void setCheckInDate(LocalDate checkInDate) {
+        this.createdAt = checkInDate.toString();
+    }
+
+    public void setNights(int nights) {
+    }
+
+    public void setCheckOutDate(LocalDate checkOutDate) {
     }
 }
