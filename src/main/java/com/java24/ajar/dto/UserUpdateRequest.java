@@ -8,6 +8,7 @@ public class UserUpdateRequest {
     private String lastName;
     private String email;
     private String phone;
+    private String address;
 
     public UserUpdateRequest() {
     }
@@ -42,5 +43,11 @@ public class UserUpdateRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

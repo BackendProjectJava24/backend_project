@@ -63,6 +63,7 @@ public class UserService implements UserServiceImp{
         updatedUser.setFirstName(userUpdateRequest.getFirstName());
         updatedUser.setLastName(userUpdateRequest.getLastName());
         updatedUser.setPhone(userUpdateRequest.getPhone());
+        updatedUser.setAddress(userUpdateRequest.getAddress());
 
 
         return  convertUserToUserUpdateResponse(userRepository.save(updatedUser));
@@ -77,6 +78,7 @@ public class UserService implements UserServiceImp{
         userUpdateResponse.setFirstName(user.getFirstName());
         userUpdateResponse.setLastName(user.getLastName());
         userUpdateResponse.setPhone(user.getPhone());
+        userUpdateResponse.setAddress(user.getAddress());
         return userUpdateResponse;
     }
 
@@ -88,11 +90,6 @@ public class UserService implements UserServiceImp{
             throw new UsernameNotFoundException(user.getUsername() + " not found");
         }
     }
-
-
-
-
-
 
 
 

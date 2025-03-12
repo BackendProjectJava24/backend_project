@@ -62,6 +62,7 @@ public class BookingService implements BookingServiceImp {
         if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
             throw new IllegalArgumentException("Place is not available for selected dates");
         }
+
       placeRepository.save(updatPlaceAvailability(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
 
 
@@ -161,13 +162,12 @@ if (bookings.isEmpty() || bookings == null) {
         Place place = placeRepository.findById(bookingDTO.getPlaceId())
                 .orElseThrow(() -> new IllegalArgumentException("Place not found"));
         // check if the user want change the place then he has to cancel this booking and do a new bookin by the new place
-//        Booking booking = bookingRepository.findById(id).orElseThrow(
-//                () -> new NoSuchElementException("Booking not found"));
-//        if (!booking.getPlace().equals(place)) {
-//            throw new IllegalArgumentException("Places do not match. Please cancel the booking and do a new bookin by the new place.");
-//        }
-        // add the existted booked period to place avilability before edit it.
-     Place updatedPlace =  updatePlaceAvailability(place, id);
+        Booking bookingToUpdate = bookingRepository.findById(id).orElse(null);
+        if (!bookingToUpdate.getPlace().getId().equals(place.getId())) {
+            throw new IllegalArgumentException("Places do not match. Please cancel the booking and do a new bookin by the new place.");
+        }
+//         add the existted booked period to place avilability before edit it.
+    Place updatedPlace =  updatePlaceAvailability(place, id);
 
         // Validate dates against availability
         if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
@@ -187,7 +187,7 @@ if (bookings.isEmpty() || bookings == null) {
         // Calculate total amount
         double totalAmount = nights * place.getPrice();
 
-        Booking bookingToUpdate = new Booking();
+//        Booking bookingToUpdate = new Booking();
         bookingToUpdate.setCustomer(user);
         bookingToUpdate.setPlace(place);
         bookingToUpdate.setCheckInDate(bookingDTO.getCheckInDate());
@@ -198,6 +198,7 @@ if (bookings.isEmpty() || bookings == null) {
         bookingToUpdate.setCreatedAt(creationDate);
 
         return bookingRepository.save(bookingToUpdate);
+
     }
     // this method is use in update and delete method and id return the the booked period to availability period.
         private Place updatePlaceAvailability(Place place,String id) {
@@ -251,25 +252,27 @@ if (bookings.isEmpty() || bookings == null) {
         AvailabilityPeriod availabilityPeriod2 = new AvailabilityPeriod();
         for (AvailabilityPeriod oldAvailability : oldAvailabilityList) {
 
-           // the avilability period before booking period
-            availabilityPeriod1.setStartDate(oldAvailability.getStartDate());
-            availabilityPeriod1.setEndDate(startDate    .minus(1, ChronoUnit.DAYS));
+            LocalDate startDateAvailable = oldAvailability.getStartDate();
+            LocalDate endDateAvailable = oldAvailability.getEndDate();
+            if ((startDate.isEqual(startDateAvailable) || startDate.isAfter(startDateAvailable) && startDate.isBefore(endDate))
+                    &&(endDate.isEqual(endDateAvailable) || endDate.isBefore(endDateAvailable)) ) {
+                // the avilability period before booking period
+                availabilityPeriod1.setStartDate(oldAvailability.getStartDate());
+                availabilityPeriod1.setEndDate(startDate    .minus(1, ChronoUnit.DAYS));
 
-            // the avilability period after booking period
-            availabilityPeriod2.setStartDate(endDate);
-            availabilityPeriod2.setEndDate(oldAvailability.getEndDate());
-            availabilityPeriodToRemove = oldAvailability;
+                // the avilability period after booking period
+                availabilityPeriod2.setStartDate(endDate);
+                availabilityPeriod2.setEndDate(oldAvailability.getEndDate());
+                availabilityPeriodToRemove = oldAvailability;
+            }
+
         }
         // remove the old avallability period
         newAvailabilityList.remove(availabilityPeriodToRemove);
 
         // check if the start date is not after the end date
-        if (availabilityPeriod1.getStartDate().isBefore(availabilityPeriod1.getEndDate())) {
             newAvailabilityList.add(availabilityPeriod1);
-        }
-        if (availabilityPeriod2.getStartDate().isBefore(availabilityPeriod2.getEndDate())) {
             newAvailabilityList.add(availabilityPeriod2);
-        }
 
         // update the place details
         place.setAvailability(newAvailabilityList);
