@@ -1,7 +1,7 @@
 package com.java24.ajar.controllers;
 
 import com.java24.ajar.models.User;
-import com.java24.ajar.services.AdminService;
+import com.java24.ajar.services.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
     @Autowired
-    private AdminService adminService;
+    private AdminServiceImpl adminService;
 
     @GetMapping("/showallusers")
     public ResponseEntity<?> showAllUsers() {

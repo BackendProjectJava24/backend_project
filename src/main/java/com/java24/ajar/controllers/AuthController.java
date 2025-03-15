@@ -1,6 +1,5 @@
 package com.java24.ajar.controllers;
 
-import com.java24.ajar.Repositories.UserRepository;
 import com.java24.ajar.dto.AuthRequest;
 import com.java24.ajar.dto.AuthResponse;
 import com.java24.ajar.dto.RegisterRequest;
@@ -8,7 +7,7 @@ import com.java24.ajar.util.JwtUtil;
 import com.java24.ajar.dto.RegisterResponse;
 import com.java24.ajar.models.Role;
 import com.java24.ajar.models.User;
-import com.java24.ajar.services.UserService;
+import com.java24.ajar.services.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,10 +28,10 @@ import java.util.Set;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserService userService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserServiceImpl userService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userService = userService;

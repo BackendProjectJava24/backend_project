@@ -5,7 +5,7 @@ import com.java24.ajar.Repositories.BookingRepository;
 import com.java24.ajar.Repositories.UserRepository;
 import com.java24.ajar.dto.*;
 import com.java24.ajar.models.Booking;
-import com.java24.ajar.services.BookingService;
+import com.java24.ajar.services.BookingServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ import java.util.List;
 @RequestMapping("/bookings")
 public class BookingController {
     private static final Logger log = LoggerFactory.getLogger(BookingController.class);
-    private final BookingService bookingService;
+    private final BookingServiceImpl bookingService;
     @Autowired
     private final BookingRepository bookingRepository;
     private UserRepository userRepository;
 
-    public BookingController(BookingService bookingService, BookingRepository bookingRepository) {
+    public BookingController(BookingServiceImpl bookingService, BookingRepository bookingRepository) {
         this.bookingService = bookingService;
         this.bookingRepository = bookingRepository;
     }

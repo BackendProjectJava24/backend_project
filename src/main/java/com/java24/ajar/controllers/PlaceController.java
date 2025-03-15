@@ -3,14 +3,12 @@ package com.java24.ajar.controllers;
 import com.java24.ajar.dto.PlaceRequest;
 import com.java24.ajar.dto.PlaceResponse;
 import com.java24.ajar.models.Place;
-import com.java24.ajar.services.PlaceServiceImp;
+import com.java24.ajar.services.PlaceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,7 +18,7 @@ import java.util.List;
 @RequestMapping("/places")
 public class PlaceController {
     @Autowired
-    private PlaceServiceImp placeServiceImp;
+    private PlaceService placeServiceImp;
 
     @PostMapping("/newplace")
     public ResponseEntity<Place> addNewPlace(@Valid @RequestBody PlaceRequest placeRequest) {
