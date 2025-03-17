@@ -3,9 +3,6 @@ package com.java24.ajar.dto;
 import com.java24.ajar.models.Booking;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 
 
