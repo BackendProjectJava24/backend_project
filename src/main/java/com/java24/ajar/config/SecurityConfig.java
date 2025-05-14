@@ -48,11 +48,7 @@ public class SecurityConfig {
                 // define URL based rules
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-<<<<<<< Updated upstream
                         .requestMatchers("/places/**").hasAnyRole("ADMIN", "USER")
-=======
-                        .requestMatchers("/places/**").hasAnyRole("USER", "ADMIN")
->>>>>>> Stashed changes
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/bookings/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/auth/**").permitAll()
