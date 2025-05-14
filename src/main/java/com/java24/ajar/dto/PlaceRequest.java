@@ -10,7 +10,7 @@ public class PlaceRequest {
         private String description;
 
         // address information this whould help me to filtring the places by the address info and the price range.
-        private  String steet;
+        private  String street;
         private  String postalCode;
         private  String city;
         private  String country;
@@ -25,98 +25,32 @@ public class PlaceRequest {
         private ArrayList<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
         private String placeType;
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<String> getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(List<String> imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public int getGest() {
-        return gest;
-    }
-
-    public void setGest(int gest) {
-        this.gest = gest;
-    }
-
-    public void setBedrooms(int bedrooms) {
-        this.bedrooms = bedrooms;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setAvailabilityPeriods(ArrayList<AvailabilityPeriod> availabilityPeriods) {
-        this.availabilityPeriods = availabilityPeriods;
-    }
-
-    public void setPlaceType(String placeType) {
-        this.placeType = placeType;
+    public PlaceRequest() {
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
     }
 
-
-    public double getLatitude() {
-        return latitude;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public String getStreet() {
+        return street;
     }
 
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public int getBedrooms() {
-        return bedrooms;
-    }
-
-
-
-    public double getPrice() {
-        return price;
-    }
-
-
-
-    public ArrayList<AvailabilityPeriod> getAvailabilityPeriods() {
-        return availabilityPeriods;
-    }
-
-
-    public String getPlaceType() {
-        return placeType;
-    }
-
-    public String getSteet() {
-        return steet;
-    }
-
-    public void setSteet(String steet) {
-        this.steet = steet;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getPostalCode() {
@@ -143,7 +77,67 @@ public class PlaceRequest {
         this.country = country;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
+    public double getLongitude() {
+        return longitude;
+    }
 
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public List<String> getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(List<String> imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public int getGest() {
+        return gest;
+    }
+
+    public void setGest(int gest) {
+        this.gest = gest;
+    }
+
+    public int getBedrooms() {
+        return bedrooms;
+    }
+
+    public void setBedrooms(int bedrooms) {
+        this.bedrooms = bedrooms;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public ArrayList<AvailabilityPeriod> getAvailabilityPeriods() {
+        return availabilityPeriods;
+    }
+
+    public void setAvailabilityPeriods(ArrayList<AvailabilityPeriod> availabilityPeriods) {
+        this.availabilityPeriods = availabilityPeriods;
+    }
+
+    public String getPlaceType() {
+        return placeType;
+    }
+
+    public void setPlaceType(String placeType) {
+        this.placeType = placeType;
+    }
 }

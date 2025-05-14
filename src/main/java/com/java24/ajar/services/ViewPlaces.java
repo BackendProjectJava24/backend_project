@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ViewPlaces {
     List<Place> getPlaces();
+    Place getPalaceById(String id);
 }

@@ -15,4 +15,15 @@ public class ViewPlacesImp implements ViewPlaces {
         List <Place> places = placeRepository.findAll();
         return places;
     }
+
+    @Override
+    public Place getPalaceById(String id) {
+        Place place = placeRepository.findById(id).orElse(null);
+   if (place == null){
+       throw  new RuntimeException("Place not found");
+   }
+        return place ;
+    }
+
+
 }

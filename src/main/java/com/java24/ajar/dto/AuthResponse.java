@@ -10,11 +10,15 @@ public class AuthResponse {
     private String jwtToken;
     private String username;
     private Set<Role> roles;
+    private String firstName;
+    private String lastName;
 
-    public AuthResponse(String jwtToken, String username, Set<Role> roles) {
+
+    public AuthResponse(String jwtToken, String username, Set<Role> roles ) {
         this.jwtToken = jwtToken;
         this.username = username;
         this.roles = roles;
+
     }
 
     public String getJwtToken() {
@@ -39,5 +43,21 @@ public class AuthResponse {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

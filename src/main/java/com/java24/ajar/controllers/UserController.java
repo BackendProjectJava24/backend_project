@@ -19,14 +19,19 @@ public class UserController {
 private UserService userService;
 
 
+@GetMapping("/viewuser")
+public  ResponseEntity<UserUpdateResponse> viewUser() {
+    UserUpdateResponse userUpdateResponse = userService.viewUser();
+    return new ResponseEntity<>(userUpdateResponse, HttpStatus.OK);
+}
+
 
     // update user
-    @PatchMapping("/userUpdate")
+    @PutMapping("/userUpdate")
     public ResponseEntity<UserUpdateResponse> updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest) {
         UserUpdateResponse userUpdateResponse = userService.updateUser(userUpdateRequest);
         return new ResponseEntity<>(userUpdateResponse, HttpStatus.OK);
     }
-
 
 
     @DeleteMapping("/userDelete/{username}")

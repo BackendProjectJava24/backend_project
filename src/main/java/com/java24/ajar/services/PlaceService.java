@@ -54,8 +54,8 @@ public class PlaceService implements PlaceServiceImp {
 
         // add the addres information to database
         // chek the addres field are not null
-        validatePlace(placeRequest);
-        newPlace.setSteet(placeRequest.getSteet());
+       validatePlace(placeRequest);
+        newPlace.setSteet(placeRequest.getStreet());
         newPlace.setPostalCode(placeRequest.getPostalCode());
         newPlace.setCity(placeRequest.getCity());
         newPlace.setCountry(placeRequest.getCountry());
@@ -132,7 +132,7 @@ public class PlaceService implements PlaceServiceImp {
         // address information
         // chek the addres field are not null
         validatePlace(placeRequest);
-        placeToUpdate.setSteet(placeRequest.getSteet());
+        placeToUpdate.setSteet(placeRequest.getStreet());
         placeToUpdate.setPostalCode(placeRequest.getPostalCode());
         placeToUpdate.setCity(placeRequest.getCity());
         placeToUpdate.setCountry(placeRequest.getCountry());
@@ -232,6 +232,17 @@ public class PlaceService implements PlaceServiceImp {
         return findedPlacesByPricaRange;
     }
 
+    @Override
+    public List<Place> getPlacesByOwner() {
+        User user = getCurrentAuthenticatedUser();
+        String ownerID = user.getId();
+        List<Place> allPlaces = placeRepository.findAllByOwnerID(ownerID);
+        if (allPlaces.isEmpty() || allPlaces == null) {
+            throw new IllegalArgumentException("there are no places in the database");
+        }
+        return allPlaces;
+    }
+
     // This method is linked to  findAvailablePlaces method.
     private boolean isPlaceAvailable(Place place, LocalDate startDate, LocalDate endDate) {
         List<AvailabilityPeriod> existingPeriods = place.getAvailability();
@@ -262,7 +273,7 @@ public class PlaceService implements PlaceServiceImp {
         if (placeRequest.getPostalCode().isEmpty() || placeRequest.getPostalCode() == null) {
             throw new IllegalArgumentException("Place postal code is required");
         }
-        if (placeRequest.getSteet() == null || placeRequest.getSteet().isEmpty()) {
+        if (placeRequest.getStreet() == null || placeRequest.getStreet().isEmpty()) {
             throw new IllegalArgumentException("Place street is required");
         }
         if (placeRequest.getGest() < 0){

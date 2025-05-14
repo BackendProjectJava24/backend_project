@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Service
@@ -37,6 +38,10 @@ public class UserService implements UserServiceImp{
         if(user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(Set.of(Role.USER));
         }
+        LocalDate date = LocalDate.now();
+
+        user.setCreated_at(date.toString());
+
 
         userRepository.save(user);
     }
@@ -79,6 +84,9 @@ public class UserService implements UserServiceImp{
         userUpdateResponse.setLastName(user.getLastName());
         userUpdateResponse.setPhone(user.getPhone());
         userUpdateResponse.setAddress(user.getAddress());
+        userUpdateResponse.setCreated_at(user.getCreated_at());
+
+
         return userUpdateResponse;
     }
 
@@ -91,10 +99,14 @@ public class UserService implements UserServiceImp{
         }
     }
 
+    @Override
+    public UserUpdateResponse viewUser() {
+        User viewUser  = getCurrentAuthenticatedUser();
+        return convertUserToUserUpdateResponse(viewUser);
+    }
 
 
-
-        public User getCurrentAuthenticatedUser() {
+    public User getCurrentAuthenticatedUser() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated() ||
                     authentication instanceof AnonymousAuthenticationToken) {

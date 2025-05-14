@@ -17,6 +17,6 @@ public interface PlaceServiceImp {
       PlaceResponse getPlaceById(String placeId);
       List<Place> findAvailablePlaces(LocalDate startDate, LocalDate endDate);
       List<Place> findPlacesByPraceRange(Double minPrice, Double maxPrice);
-
+List<Place> getPlacesByOwner();
       List<Place> searchByCity(String city);
 }

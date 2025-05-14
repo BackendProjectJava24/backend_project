@@ -21,7 +21,7 @@ public class Place {
     private String description;
     // address information this whould help me to filtring the places by the address info and the price range.
     @NotNull(message = "please write the addres pf place.")
-    private  String steet;
+    private  String street;
     @NotNull(message = "please write the addres pf place.")
     private  String postalCode;
     @NotNull(message = "please write the addres pf place.")
@@ -125,11 +125,11 @@ public class Place {
     }
 
     public String getSteet() {
-        return steet;
+        return street;
     }
 
     public void setSteet(String steet) {
-        this.steet = steet;
+        this.street = steet;
     }
 
     public String getPostalCode() {

@@ -10,4 +10,6 @@ public interface PlaceRepository extends MongoRepository<Place, String> {
 
     //fidn the places than its price between mini pricce and max price
     List<Place> findByPriceBetween(Double minPrice, Double maxPrice);
+
+    List<Place> findAllByOwnerID(String ownerID);
 }

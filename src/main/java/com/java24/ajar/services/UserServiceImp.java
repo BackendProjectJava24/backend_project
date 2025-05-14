@@ -11,4 +11,5 @@ public interface UserServiceImp {
     boolean existsByUsername(String username);
     UserUpdateResponse updateUser( UserUpdateRequest  userUpdateRequest);
     void deleteUser(String username);
+    UserUpdateResponse viewUser();
 }

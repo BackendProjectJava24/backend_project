@@ -39,21 +39,6 @@ public class PlaceController {
         return new ResponseEntity<>(findedPlace, HttpStatus.OK);
     }
 
-
-
-    @PatchMapping("/updateplace/{id}")
-    public ResponseEntity<PlaceResponse> updatePlace(@Valid @PathVariable String id, @RequestBody PlaceRequest placeRequest) {
-        PlaceResponse place = placeServiceImp.updatePlace(id, placeRequest);
-        return new ResponseEntity<>(place, HttpStatus.OK);
-    }
-
-
-@DeleteMapping("/deleteplace/{id}")
-    public ResponseEntity<Place> deletePlace(@PathVariable String id) {
-       Place placeResponse =  placeServiceImp.deletePlace(id);
-        return new ResponseEntity<>(placeResponse, HttpStatus.NO_CONTENT);
-}
-
     @GetMapping("/availablePlaces")
     public List<Place> findAvailablePlaces(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -72,5 +57,32 @@ public class PlaceController {
         List<Place> findedplaces = placeServiceImp.findPlacesByPraceRange(minPrice, maxPrice);
         return new ResponseEntity<>(findedplaces, HttpStatus.OK);
     }
+
+
+    @GetMapping("/getplacesbyowner")
+    public ResponseEntity<List<Place>> getPlacesByOwner() {
+        List<Place> places = placeServiceImp.getPlacesByOwner();
+        return new ResponseEntity<>(places, HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+    @PatchMapping("/updateplace/{id}")
+    public ResponseEntity<PlaceResponse> updatePlace(@Valid @PathVariable String id, @RequestBody PlaceRequest placeRequest) {
+        PlaceResponse place = placeServiceImp.updatePlace(id, placeRequest);
+        return new ResponseEntity<>(place, HttpStatus.OK);
+    }
+
+
+@DeleteMapping("/deleteplace/{id}")
+    public ResponseEntity<Place> deletePlace(@PathVariable String id) {
+       Place placeResponse =  placeServiceImp.deletePlace(id);
+        return new ResponseEntity<>(placeResponse, HttpStatus.NO_CONTENT);
+}
+
 
 }

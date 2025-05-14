@@ -6,6 +6,7 @@ public class UserUpdateResponse {
     private String email;
     private String phone;
     private String address;
+    private String created_at;
 
     public UserUpdateResponse() {
     }
@@ -48,5 +49,13 @@ public class UserUpdateResponse {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }

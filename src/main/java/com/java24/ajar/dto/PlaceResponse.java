@@ -4,7 +4,6 @@ package com.java24.ajar.dto;
 import com.java24.ajar.models.AvailabilityPeriod;
 import jakarta.validation.constraints.NegativeOrZero;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class PlaceResponse {
 
     // address information this whould help me to filtring the places by the address info and the price range.
     @NotNull(message = "please write the addres pf place.")
-    private  String steet;
+    private  String street;
     @NotNull(message = "please write the addres pf place.")
     private  String postalCode;
     @NotNull(message = "please write the addres pf place.")
@@ -32,7 +31,7 @@ public class PlaceResponse {
 
     private List<String> imageUrl ;
     @NegativeOrZero(message = "gues cannot be negative or zero. Please write right guest")
-    private int gestt;
+    private int gest;
     @NegativeOrZero(message = "bedroom cannot be negative or zero. Please write right bedroom")
     private  int bedrooms;
     @NegativeOrZero(message = "plice cannot be negative or zero. Please write right price")
@@ -94,11 +93,11 @@ public class PlaceResponse {
     }
 
     public String getSteet() {
-        return steet;
+        return street;
     }
 
     public void setSteet(String steet) {
-        this.steet = steet;
+        this.street = steet;
     }
 
     public String getPostalCode() {
@@ -125,12 +124,12 @@ public class PlaceResponse {
         this.country = country;
     }
 
-    public int getGestt() {
-        return gestt;
+    public int getGest() {
+        return gest;
     }
 
-    public void setGestt(int gestt) {
-        this.gestt = gestt;
+    public void setGest(int gest) {
+        this.gest = gest;
     }
 
     public double getLatitude() {
