@@ -1,14 +1,15 @@
 package com.java24.ajar.controllers;
 
-import com.java24.ajar.Repositories.UserRepository;
 import com.java24.ajar.dto.AuthRequest;
 import com.java24.ajar.dto.AuthResponse;
 import com.java24.ajar.dto.RegisterRequest;
-import com.java24.ajar.util.JwtUtil;
 import com.java24.ajar.dto.RegisterResponse;
 import com.java24.ajar.models.Role;
 import com.java24.ajar.models.User;
 import com.java24.ajar.services.UserService;
+
+import com.java24.ajar.util.JwtUtil;
+
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -119,7 +120,12 @@ public class AuthController {
             AuthResponse authResponse = new AuthResponse(
                     "Login successful",
                     userDetails.getUsername(),
-                    userService.findByUsername(userDetails.getUsername()).getRoles()
+                    userService.findByUsername(userDetails.getUsername()).getRoles(),
+                    userService.findByUsername(userDetails.getUsername()).getFirstName(),
+                    userService.findByUsername(userDetails.getUsername()).getLastName(),
+                    userService.findByUsername(userDetails.getUsername()).getEmail(),
+                    userService.findByUsername(userDetails.getUsername()).getPhone(),
+                    userService.findByUsername(userDetails.getUsername()).getAddress()
             );
 
             return ResponseEntity.ok()
@@ -134,6 +140,31 @@ public class AuthController {
         }
     }
 
+
+    @GetMapping("/check")
+    public ResponseEntity<?> checkAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // kontrollera om användaren är authenticated
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated!");
+        }
+
+        // returnera user info om authentication
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        return ResponseEntity.ok(new AuthResponse(
+                "Authenticated",
+                user.getUsername(),
+                user.getRoles(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getAddress()
+        ));
+    }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
@@ -157,24 +188,6 @@ public class AuthController {
                 .body("Logout successful!");
     }
 
-    // kolla om en user är authenticated
-    @GetMapping("/check")
-    public ResponseEntity<?> checkAuthentication() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // kontrollera om användaren är authenticated
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated!");
-        }
 
-        // returnera user info om authentication
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.findByUsername(userDetails.getUsername());
-
-        return ResponseEntity.ok(new AuthResponse(
-                "Authenticated",
-                user.getUsername(),
-                user.getRoles()
-        ));
-    }
 }

@@ -5,10 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.annotation.CreatedDate;
 
-
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 public class RegisterRequest {
@@ -20,10 +17,8 @@ public class RegisterRequest {
     private String email;
     private String phone;
     private String address;
-    @CreatedDate
-    private String created_at;
 
-    public RegisterRequest(String username, String password, Set<Role> roles, String firstName, String lastName, String email, String phone, String address, String created_at) {
+    public RegisterRequest(String username, String password, Set<Role> roles, String firstName, String lastName, String email, String phone, String address) {
         this.username = username;
         this.password = password;
         this.roles = roles;
@@ -32,7 +27,6 @@ public class RegisterRequest {
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.created_at = created_at;
     }
 
     public RegisterRequest() {
@@ -102,11 +96,5 @@ public class RegisterRequest {
         this.address = address;
     }
 
-    public String getCreated_at() {
-        return created_at;
-    }
 
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
 }

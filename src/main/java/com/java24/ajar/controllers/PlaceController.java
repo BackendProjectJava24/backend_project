@@ -6,11 +6,9 @@ import com.java24.ajar.models.Place;
 import com.java24.ajar.services.PlaceServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,7 +21,7 @@ public class PlaceController {
     private PlaceServiceImp placeServiceImp;
 
     @PostMapping("/newplace")
-    public ResponseEntity<Place> addNewPlace(@Valid @RequestBody PlaceRequest placeRequest) {
+    public ResponseEntity<Place> addNewPlace(@RequestBody PlaceRequest placeRequest) {
         Place  placeResponse = placeServiceImp.createPlace(placeRequest);
         return new ResponseEntity<>(placeResponse, HttpStatus.CREATED);
     }

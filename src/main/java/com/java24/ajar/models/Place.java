@@ -124,12 +124,14 @@ public class Place {
         this.ownerID = ownerID;
     }
 
-    public String getSteet() {
+
+    public String getStreet() {
         return street;
     }
 
-    public void setSteet(String steet) {
-        this.street = steet;
+    public void setStreet(String street) {
+        this.street = street;
+
     }
 
     public String getPostalCode() {

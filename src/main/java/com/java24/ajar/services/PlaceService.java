@@ -54,8 +54,9 @@ public class PlaceService implements PlaceServiceImp {
 
         // add the addres information to database
         // chek the addres field are not null
-       validatePlace(placeRequest);
-        newPlace.setSteet(placeRequest.getStreet());
+
+      //  validatePlace(placeRequest);
+        newPlace.setStreet(placeRequest.getStreet());
         newPlace.setPostalCode(placeRequest.getPostalCode());
         newPlace.setCity(placeRequest.getCity());
         newPlace.setCountry(placeRequest.getCountry());
@@ -91,7 +92,7 @@ public class PlaceService implements PlaceServiceImp {
 
         // view the place information
         // chek the addres field are not null
-        placeResponse.setSteet(place.getSteet());
+        placeResponse.setSteet(place.getStreet());
         placeResponse.setPostalCode(place.getPostalCode());
         placeResponse.setCity(place.getCity());
         placeResponse.setCountry(place.getCountry());
@@ -104,7 +105,7 @@ public class PlaceService implements PlaceServiceImp {
             placeResponse.setImageUrl(images);
         }
 
-        placeResponse.setSteet(place.getSteet());
+        placeResponse.setSteet(place.getStreet());
         placeResponse.setBedrooms(place.getBedroom());
         placeResponse.setPrice(place.getPrice());
         placeResponse.setPlaceType(place.getPlaceType());
@@ -132,7 +133,9 @@ public class PlaceService implements PlaceServiceImp {
         // address information
         // chek the addres field are not null
         validatePlace(placeRequest);
-        placeToUpdate.setSteet(placeRequest.getStreet());
+
+        placeToUpdate.setStreet(placeRequest.getStreet());
+
         placeToUpdate.setPostalCode(placeRequest.getPostalCode());
         placeToUpdate.setCity(placeRequest.getCity());
         placeToUpdate.setCountry(placeRequest.getCountry());

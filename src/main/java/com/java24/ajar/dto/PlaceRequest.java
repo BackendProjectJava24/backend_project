@@ -45,13 +45,6 @@ public class PlaceRequest {
         this.description = description;
     }
 
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
 
     public String getPostalCode() {
         return postalCode;
@@ -139,5 +132,13 @@ public class PlaceRequest {
 
     public void setPlaceType(String placeType) {
         this.placeType = placeType;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 }
