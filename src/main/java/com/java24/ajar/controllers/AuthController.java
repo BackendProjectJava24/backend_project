@@ -60,7 +60,7 @@ public class AuthController {
         user.setEmail(registerRequest.getEmail());
         user.setPhone(registerRequest.getPhone());
         user.setAddress(registerRequest.getAddress());
-        user.setCreated_at(registerRequest.getCreated_at());
+
 
         // assign roles
         if (registerRequest.getRoles() == null || registerRequest.getRoles().isEmpty()) {
