@@ -35,7 +35,7 @@ public  ResponseEntity<UserUpdateResponse> viewUser() {
 
 
     @DeleteMapping("/userDelete/{username}")
-    public ResponseEntity<?> deteteUser(@Valid @PathVariable String username, @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> deleteUser(@Valid @PathVariable String username, @RequestBody AuthRequest authRequest) {
         User user = userService.findByUsername(username);
         RegisterResponse response = new RegisterResponse(
                 "user deleted successfully.",

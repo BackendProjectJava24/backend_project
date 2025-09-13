@@ -52,7 +52,7 @@ public class PlaceController {
 
     @GetMapping("/findPlacesByPriceRange")
     public ResponseEntity<List<Place>> findPlacesByPriceRange(@RequestParam double minPrice ,@RequestParam double maxPrice ) {
-        List<Place> findedplaces = placeServiceImp.findPlacesByPraceRange(minPrice, maxPrice);
+        List<Place> findedplaces = placeServiceImp.findPlacesByPriceRange(minPrice, maxPrice);
         return new ResponseEntity<>(findedplaces, HttpStatus.OK);
     }
 

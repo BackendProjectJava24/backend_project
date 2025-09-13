@@ -6,24 +6,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceRequest {
-        private String name;
-        private String description;
+    private String name;
+    private String description;
 
-        // address information this whould help me to filtring the places by the address info and the price range.
-        private  String street;
-        private  String postalCode;
-        private  String city;
-        private  String country;
+    // address information this whould help me to filtring the places by the address info and the price range.
+    private String street;
+    private String postalCode;
+    private String city;
+    private String country;
     private double latitude;
     private double longitude;
 
 
     private List<String> imageUrl;
-        private int gest;
-        private  int bedrooms;
-        private double price;
-        private ArrayList<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
-        private String placeType;
+    private int guest;
+    private int bedrooms;
+    private double price;
+    private ArrayList<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
+    private String placeType;
 
 
     public PlaceRequest() {
@@ -95,11 +95,11 @@ public class PlaceRequest {
     }
 
     public int getGest() {
-        return gest;
+        return guest;
     }
 
     public void setGest(int gest) {
-        this.gest = gest;
+        this.guest = gest;
     }
 
     public int getBedrooms() {

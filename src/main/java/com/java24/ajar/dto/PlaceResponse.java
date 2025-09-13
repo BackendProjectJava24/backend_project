@@ -31,7 +31,7 @@ public class PlaceResponse {
 
     private List<String> imageUrl ;
     @NegativeOrZero(message = "gues cannot be negative or zero. Please write right guest")
-    private int gest;
+    private int guest;
     @NegativeOrZero(message = "bedroom cannot be negative or zero. Please write right bedroom")
     private  int bedrooms;
     @NegativeOrZero(message = "plice cannot be negative or zero. Please write right price")
@@ -124,12 +124,12 @@ public class PlaceResponse {
         this.country = country;
     }
 
-    public int getGest() {
-        return gest;
+    public int getGuest() {
+        return guest;
     }
 
-    public void setGest(int gest) {
-        this.gest = gest;
+    public void setGuest(int guest) {
+        this.guest = guest;
     }
 
     public double getLatitude() {

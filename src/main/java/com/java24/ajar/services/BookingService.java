@@ -20,8 +20,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -63,11 +61,11 @@ public class BookingService implements BookingServiceImp {
             throw new IllegalArgumentException("Place is not available for selected dates");
         }
 
-      placeRepository.save(updatPlaceAvailability(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
+      placeRepository.save(updatePlaceAvailability(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
 
 
         // Validate guests count
-        if (bookingDTO.getGuests() > place.getGestt()) {
+        if (bookingDTO.getGuests() > place.getGuest()) {
             throw new IllegalArgumentException("Number of guests exceeds place capacity");
         }
 
@@ -104,7 +102,7 @@ public class BookingService implements BookingServiceImp {
         long nights =  period.getDays();
         bookingResponseDTO.setNights((int) nights);
 
-        bookingResponseDTO.setGests(bookingResponseDTO.getGests());
+        bookingResponseDTO.setGuests(bookingResponseDTO.getGuests());
         bookingResponseDTO.setTotalAmount(booking.getTotalAmount());
         bookingResponseDTO.setCreatedAt(booking.getCreatedAt());
 
@@ -174,10 +172,10 @@ if (bookings.isEmpty() || bookings == null) {
             throw new IllegalArgumentException("Place is not available for selected dates");
         }
 
-        placeRepository.save(updatPlaceAvailability(updatedPlace, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
+        placeRepository.save(updatePlaceAvailability(updatedPlace, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
 
         // Validate guests count
-        if (bookingDTO.getGuests() > place.getGestt()) {
+        if (bookingDTO.getGuests() > place.getGuest()) {
             throw new IllegalArgumentException("Number of guests exceeds place capacity");
         }
 
@@ -217,17 +215,17 @@ if (bookings.isEmpty() || bookings == null) {
     @Override
     public String cancelBooking(String id) {
         User user = getCurrentAuthenticatedUser();
-        Booking cencelBooking = bookingRepository.findById(id).orElse(null);
-        if (cencelBooking == null) {
+        Booking cancelbooking = bookingRepository.findById(id).orElse(null);
+        if (cancelbooking == null) {
             throw new IllegalArgumentException("User is not authenticated");
         }
         // update the place availability before the canceling
-        placeRepository.save(updatePlaceAvailability(cencelBooking.getPlace(), id));
+        placeRepository.save(updatePlaceAvailability(cancelbooking.getPlace(), id));
 
-        if (!cencelBooking.getCustomer().getUsername().equals(user.getUsername())) {
+        if (!cancelbooking.getCustomer().getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("You cant delete this place. You are not owner of this place");
         }
-        bookingRepository.delete(cencelBooking);
+        bookingRepository.delete(cancelbooking);
         return "Booking has been cancelled";
     }
 
@@ -242,7 +240,7 @@ if (bookings.isEmpty() || bookings == null) {
     }
 
     // this mehod do the update on the avilability list and is is used in create a new booking method
-    private Place updatPlaceAvailability(Place place, LocalDate startDate, LocalDate endDate) {
+    private Place updatePlaceAvailability(Place place, LocalDate startDate, LocalDate endDate) {
         // create a list to add the availability period before booking period and another after booking period
         List<AvailabilityPeriod> newAvailabilityList = place.getAvailability();
         // check if the booking poerid is included  in the availability period

@@ -4,6 +4,7 @@ import com.java24.ajar.models.AvailabilityPeriod;
 import com.java24.ajar.models.User;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 public class BookingDTO {
@@ -45,5 +46,9 @@ public class BookingDTO {
 
     public void setGuests(int guests) {
         this.guests = guests;
+    }
+
+    public double calculateNights(LocalDate checkInDate, LocalDate checkOutDate) {
+        return Period.between(checkInDate, checkOutDate).getDays();
     }
 }

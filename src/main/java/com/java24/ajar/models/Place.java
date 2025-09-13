@@ -15,26 +15,26 @@ import java.util.List;
 public class Place {
     @Id
     private String id;
-    @NotNull(message = "please rype the the name of place.")
+    @NotNull(message = "please Type the the name of place.")
     @NotEmpty(message = "name field cannot be empty")
     private String name;
     private String description;
-    // address information this whould help me to filtring the places by the address info and the price range.
-    @NotNull(message = "please write the addres pf place.")
+    // address information this should help me to filtring the places by the address info and the price range.
+    @NotNull(message = "please write the address of place.")
     private  String street;
-    @NotNull(message = "please write the addres pf place.")
+    @NotNull(message = "please write the address of place.")
     private  String postalCode;
-    @NotNull(message = "please write the addres pf place.")
+    @NotNull(message = "please write the address of place.")
     private  String city;
-    @NotNull(message = "please write the addres pf place.")
+    @NotNull(message = "please write the address of place.")
     private  String country;
-    @NotNull(message = "please write the addres pf place.")
+    @NotNull(message = "please write the address of place.")
     private double latitude;
-    @NotNull(message = "please write the addres pf place.")
+    @NotNull(message = "please write the address of place.")
     private double longitude;
 
     private List<String> imageURL;
-    private int gestt;
+    private int guest;
     private int bedroom;
     private double price;
     private List<AvailabilityPeriod> availability;
@@ -55,12 +55,12 @@ public class Place {
         this.placeType = placeType;
     }
 
-    public int getGestt() {
-        return gestt;
+    public int getGuest() {
+        return guest;
     }
 
-    public void setGestt(int gestt) {
-        this.gestt = gestt;
+    public void setGuest(int guest) {
+        this.guest = guest;
     }
 
     public String getId() {

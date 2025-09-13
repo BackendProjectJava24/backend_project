@@ -3,7 +3,6 @@ import com.java24.ajar.dto.PlaceRequest;
 import com.java24.ajar.dto.PlaceResponse;
 import com.java24.ajar.models.Place;
 
-import javax.sound.sampled.FloatControl;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface PlaceServiceImp {
       List<Place> getAllPlaces();
       PlaceResponse getPlaceById(String placeId);
       List<Place> findAvailablePlaces(LocalDate startDate, LocalDate endDate);
-      List<Place> findPlacesByPraceRange(Double minPrice, Double maxPrice);
+      List<Place> findPlacesByPriceRange(Double minPrice, Double maxPrice);
 List<Place> getPlacesByOwner();
       List<Place> searchByCity(String city);
 }

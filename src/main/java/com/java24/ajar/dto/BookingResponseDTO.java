@@ -4,7 +4,6 @@ import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class BookingResponseDTO {
     private User customer;
@@ -12,7 +11,7 @@ public class BookingResponseDTO {
     private LocalDate chickInDate;
     private LocalDate chickOutDate;
     private int nights;
-    private int gests;
+    private int guests;
     private double totalAmount;
     private LocalDate createdAt;
 
@@ -60,12 +59,12 @@ public class BookingResponseDTO {
         this.nights = nights;
     }
 
-    public int getGests() {
-        return gests;
+    public int getGuests() {
+        return guests;
     }
 
-    public void setGests(int gests) {
-        this.gests = gests;
+    public void setGuests(int guests) {
+        this.guests = guests;
     }
 
     public double getTotalAmount() {

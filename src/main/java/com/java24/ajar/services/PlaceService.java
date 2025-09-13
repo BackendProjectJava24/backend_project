@@ -52,8 +52,8 @@ public class PlaceService implements PlaceServiceImp {
         newPlace.setName(placeRequest.getName());
         newPlace.setDescription(placeRequest.getDescription());
 
-        // add the addres information to database
-        // chek the addres field are not null
+        // add the address information to database
+        // chek the address field are not null
 
       //  validatePlace(placeRequest);
         newPlace.setStreet(placeRequest.getStreet());
@@ -71,7 +71,7 @@ public class PlaceService implements PlaceServiceImp {
         }
         newPlace.setImageURL(images);
         newPlace.setOwnerID(user);
-        newPlace.setGestt(placeRequest.getGest());
+        newPlace.setGuest(placeRequest.getGest());
         newPlace.setBedroom(placeRequest.getBedrooms());
         newPlace.setPrice(placeRequest.getPrice());
         // add the availability periods when the place is available to booking
@@ -149,7 +149,7 @@ public class PlaceService implements PlaceServiceImp {
             }
         }
         placeToUpdate.setImageURL(images);
-        placeToUpdate.setGestt(placeRequest.getGest());
+        placeToUpdate.setGuest(placeRequest.getGest());
         placeToUpdate.setBedroom(placeRequest.getBedrooms());
         placeToUpdate.setPrice(placeRequest.getPrice());
         placeToUpdate.setOwnerID(user);
@@ -221,7 +221,7 @@ public class PlaceService implements PlaceServiceImp {
 
 
     @Override
-    public List<Place> findPlacesByPraceRange(Double minPrice, Double maxPrice) {
+    public List<Place> findPlacesByPriceRange(Double minPrice, Double maxPrice) {
         if (minPrice > maxPrice) {
             throw new IllegalArgumentException("minPrice must be less than maxPrice");
         }
