@@ -1,43 +1,70 @@
 package com.java24.ajar.dto;
 
-import java.util.List;
-import java.util.Map;
+import com.java24.ajar.models.Place;
+import com.java24.ajar.models.User;
+
+import java.time.LocalDate;
 
 public class BookingResponseDTO {
-    private String id;
-    private String customerId;
+    private User customer;
+    private Place BookedPlace;
+    private LocalDate chickInDate;
+    private LocalDate chickOutDate;
+    private int nights;
+    private int guests;
     private double totalAmount;
-    private List<BookingItemDTO> items;
-    private Map<String, String> quantities;
-    private String createdAt;
+    private LocalDate createdAt;
 
-    public BookingResponseDTO(String id, String customerId, double totalAmount, List<BookingItemDTO> items, Map<String, String> quantities, String createdAt) {
-        this.id = id;
-        this.customerId = customerId;
-        this.totalAmount = totalAmount;
-        this.items = items;
-        this.quantities = quantities;
-        this.createdAt = createdAt;
-    }
 
     public BookingResponseDTO() {
     }
 
-
-    public String getId() {
-        return id;
+    public User getCustomer() {
+        return customer;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCustomer(User customer) {
+        this.customer = customer;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public Place getBookedPlace() {
+        return BookedPlace;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setBookedPlace(Place bookedPlace) {
+        BookedPlace = bookedPlace;
+    }
+
+    public LocalDate getChickInDate() {
+        return chickInDate;
+    }
+
+    public void setChickInDate(LocalDate chickInDate) {
+        this.chickInDate = chickInDate;
+    }
+
+    public LocalDate getChickOutDate() {
+        return chickOutDate;
+    }
+
+    public void setChickOutDate(LocalDate chickOutDate) {
+        this.chickOutDate = chickOutDate;
+    }
+
+    public int getNights() {
+        return nights;
+    }
+
+    public void setNights(int nights) {
+        this.nights = nights;
+    }
+
+    public int getGuests() {
+        return guests;
+    }
+
+    public void setGuests(int guests) {
+        this.guests = guests;
     }
 
     public double getTotalAmount() {
@@ -48,27 +75,11 @@ public class BookingResponseDTO {
         this.totalAmount = totalAmount;
     }
 
-    public List<BookingItemDTO> getItems() {
-        return items;
-    }
-
-    public void setItems(List<BookingItemDTO> items) {
-        this.items = items;
-    }
-
-    public Map<String, String> getQuantities() {
-        return quantities;
-    }
-
-    public void setQuantities(Map<String, String> quantities) {
-        this.quantities = quantities;
-    }
-
-    public String getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 }

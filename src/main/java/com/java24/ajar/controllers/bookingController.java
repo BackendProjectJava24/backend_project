@@ -78,7 +78,7 @@ public class bookingController {
 
     }
 
-
+/*
     @GetMapping
     @PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<List<BookingResponse>> getAllBookings() {
@@ -86,7 +86,7 @@ public class bookingController {
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
-
+*/
 
     @GetMapping("/allBooking")
     public ResponseEntity<List<Booking>> gettAllBooking() {

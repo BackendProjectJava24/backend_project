@@ -1,7 +1,6 @@
 package com.java24.ajar.dto;
 
 public class BookingItemDTO {
-
     private String placeId;
     private String name;
     private double price;
