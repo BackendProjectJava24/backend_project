@@ -4,6 +4,7 @@ import com.java24.ajar.Repositories.BookingRepository;
 import com.java24.ajar.Repositories.PlaceRepository;
 import com.java24.ajar.Repositories.UserRepository;
 
+import com.java24.ajar.config.CheckAuthentiction;
 import com.java24.ajar.dto.BookingDTO;
 import com.java24.ajar.dto.BookingResponseDTO;
 import com.java24.ajar.exceptions.UnauthorizedException;
@@ -11,6 +12,7 @@ import com.java24.ajar.models.AvailabilityPeriod;
 import com.java24.ajar.models.Booking;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,16 +27,19 @@ import java.util.NoSuchElementException;
 
 @Service
 public class BookingService implements BookingServiceImp {
+    @Autowired
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
+    @Autowired
+    CheckAuthentiction checkAuthentication;
 
     public BookingService(BookingRepository bookingRepository, UserRepository userRepository, PlaceRepository placeRepository) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.placeRepository = placeRepository;
     }
-
+/*
     // Add the authenticate method
     public User getCurrentAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -47,11 +52,11 @@ public class BookingService implements BookingServiceImp {
         return userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
-
+*/
 
     @Override
     public Booking createBooking(BookingDTO bookingDTO) {
-        User user = getCurrentAuthenticatedUser();
+        User user = checkAuthentication.getCurrentAuthenticatedUser();
 
         Place place = placeRepository.findById(bookingDTO.getPlaceId())
                 .orElseThrow(() -> new IllegalArgumentException("Place not found"));
@@ -155,7 +160,7 @@ if (bookings.isEmpty() || bookings == null) {
 
     @Override
     public Booking updateBooking(String id, BookingDTO bookingDTO) {
-        User user = getCurrentAuthenticatedUser();
+        User user = checkAuthentication.getCurrentAuthenticatedUser();
 
         Place place = placeRepository.findById(bookingDTO.getPlaceId())
                 .orElseThrow(() -> new IllegalArgumentException("Place not found"));
@@ -214,7 +219,7 @@ if (bookings.isEmpty() || bookings == null) {
 
     @Override
     public String cancelBooking(String id) {
-        User user = getCurrentAuthenticatedUser();
+        User user = checkAuthentication.getCurrentAuthenticatedUser();
         Booking cancelbooking = bookingRepository.findById(id).orElse(null);
         if (cancelbooking == null) {
             throw new IllegalArgumentException("User is not authenticated");
@@ -231,7 +236,7 @@ if (bookings.isEmpty() || bookings == null) {
 
     @Override
     public List<Booking> getUserBookings() {
-        User user = getCurrentAuthenticatedUser();
+        User user = checkAuthentication.getCurrentAuthenticatedUser();
         List<Booking> bookings = bookingRepository.findByCustomer(user);
         if (bookings.isEmpty() || bookings == null) {
             throw new NoSuchElementException("User is not authenticated");

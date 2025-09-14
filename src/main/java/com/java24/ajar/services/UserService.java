@@ -1,11 +1,13 @@
 package com.java24.ajar.services;
 
 import com.java24.ajar.Repositories.UserRepository;
+import com.java24.ajar.config.CheckAuthentiction;
 import com.java24.ajar.dto.UserUpdateRequest;
 import com.java24.ajar.dto.UserUpdateResponse;
 import com.java24.ajar.exceptions.UnauthorizedException;
 import com.java24.ajar.models.Role;
 import com.java24.ajar.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +21,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Service
-public class UserService implements UserServiceImp{
+public class UserService implements UserServiceImp {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -28,6 +30,11 @@ public class UserService implements UserServiceImp{
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Add authentication method
+    @Autowired
+    CheckAuthentiction checkAuthentication;
+
+
     // register user
     public void registerUser(User user) {
         // hash password
@@ -35,7 +42,7 @@ public class UserService implements UserServiceImp{
         user.setPassword(encodedPassword);
 
         // ensure the user has at least default role USER
-        if(user.getRoles() == null || user.getRoles().isEmpty()) {
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(Set.of(Role.USER));
         }
         LocalDate date = LocalDate.now();
@@ -58,10 +65,9 @@ public class UserService implements UserServiceImp{
     }
 
 
-
     // update a user informantion
     public UserUpdateResponse updateUser(UserUpdateRequest userUpdateRequest) {
-        User updatedUser = getCurrentAuthenticatedUser();
+        User updatedUser = checkAuthentication.getCurrentAuthenticatedUser();
 
 
         updatedUser.setEmail(userUpdateRequest.getEmail());
@@ -71,9 +77,8 @@ public class UserService implements UserServiceImp{
         updatedUser.setAddress(userUpdateRequest.getAddress());
 
 
-        return  convertUserToUserUpdateResponse(userRepository.save(updatedUser));
+        return convertUserToUserUpdateResponse(userRepository.save(updatedUser));
     }
-
 
 
     // this method gandle the resonse anfer user update
@@ -85,8 +90,6 @@ public class UserService implements UserServiceImp{
         userUpdateResponse.setPhone(user.getPhone());
         userUpdateResponse.setAddress(user.getAddress());
         userUpdateResponse.setCreated_at(user.getCreated_at());
-
-
 
 
         return userUpdateResponse;
@@ -103,23 +106,11 @@ public class UserService implements UserServiceImp{
 
     @Override
     public UserUpdateResponse viewUser() {
-        User viewUser  = getCurrentAuthenticatedUser();
+        User viewUser = checkAuthentication.getCurrentAuthenticatedUser();
         return convertUserToUserUpdateResponse(viewUser);
     }
+}
 
-
-    public User getCurrentAuthenticatedUser() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated() ||
-                    authentication instanceof AnonymousAuthenticationToken) {
-                throw new UnauthorizedException("User is not authenticated");
-            }
-
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return userRepository.findByUsername(userDetails.getUsername())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        }
-    }
 
 
 

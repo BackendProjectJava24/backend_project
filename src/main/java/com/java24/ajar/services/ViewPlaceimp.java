@@ -4,7 +4,7 @@ import com.java24.ajar.models.Place;
 
 import java.util.List;
 
-public interface ViewPlaces {
+public interface ViewPlaceimp {
     List<Place> getPlaces();
     Place getPalaceById(String id);
 }

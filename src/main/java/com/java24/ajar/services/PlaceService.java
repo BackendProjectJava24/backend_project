@@ -2,12 +2,14 @@ package com.java24.ajar.services;
 
 import com.java24.ajar.Repositories.PlaceRepository;
 import com.java24.ajar.Repositories.UserRepository;
+import com.java24.ajar.config.CheckAuthentiction;
 import com.java24.ajar.dto.PlaceRequest;
 import com.java24.ajar.dto.PlaceResponse;
 import com.java24.ajar.exceptions.UnauthorizedException;
 import com.java24.ajar.models.AvailabilityPeriod;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,23 +33,14 @@ public class PlaceService implements PlaceServiceImp {
     }
 
     // Add the authenticate method
-    public User getCurrentAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() ||
-                authentication instanceof AnonymousAuthenticationToken) {
-            throw new UnauthorizedException("User is not authenticated");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-    }
+    @Autowired
+  CheckAuthentiction  checkAuthentication;
 
 
     // this method handle the place adding to database
     @Override
     public Place createPlace(PlaceRequest placeRequest) {
-        User user = getCurrentAuthenticatedUser();
+        User user = checkAuthentication.getCurrentAuthenticatedUser();
         Place newPlace = new Place();
         newPlace.setName(placeRequest.getName());
         newPlace.setDescription(placeRequest.getDescription());
@@ -119,7 +112,7 @@ public class PlaceService implements PlaceServiceImp {
     @Override
     public PlaceResponse updatePlace(String id, PlaceRequest placeRequest) {
         // check if the user is authenticated.
-        User user = getCurrentAuthenticatedUser();
+        User user = checkAuthentication.getCurrentAuthenticatedUser();
         // check if the place is existed or not
         Place placeToUpdate = placeRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("Place not found"));
@@ -163,7 +156,7 @@ public class PlaceService implements PlaceServiceImp {
 
     @Override
     public Place deletePlace(String placeID) {
-        User user = getCurrentAuthenticatedUser();
+        User user = checkAuthentication.getCurrentAuthenticatedUser();
         Place placeToDelete = placeRepository.findById(placeID).orElseThrow(() -> new IllegalArgumentException("Place not found"));
         if (!placeToDelete.getOwnerID().getUsername().equals(user.getUsername())) {
             throw new AccessDeniedException("You cant delete this place. You are not owner of this place");
@@ -237,7 +230,7 @@ public class PlaceService implements PlaceServiceImp {
 
     @Override
     public List<Place> getPlacesByOwner() {
-        User user = getCurrentAuthenticatedUser();
+        User user = checkAuthentication.getCurrentAuthenticatedUser();
         String ownerID = user.getId();
         List<Place> allPlaces = placeRepository.findAllByOwnerID(ownerID);
         if (allPlaces.isEmpty() || allPlaces == null) {

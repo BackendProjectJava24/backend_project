@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class ViewPlacesImp implements ViewPlaces {
+public class ViewPlaceService implements ViewPlaceimp {
     @Autowired
     private PlaceRepository placeRepository;
     @Override
