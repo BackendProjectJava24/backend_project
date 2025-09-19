@@ -6,7 +6,6 @@ import com.java24.ajar.models.User;
 import java.time.LocalDate;
 
 public class BookingResponseDTO {
-    private User customer;
     private Place BookedPlace;
     private LocalDate chickInDate;
     private LocalDate chickOutDate;
@@ -19,13 +18,6 @@ public class BookingResponseDTO {
     public BookingResponseDTO() {
     }
 
-    public User getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(User customer) {
-        this.customer = customer;
-    }
 
     public Place getBookedPlace() {
         return BookedPlace;

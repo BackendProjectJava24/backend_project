@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-
 @Document(collection = "places")
 public class Place {
     @Id
@@ -37,7 +36,10 @@ public class Place {
     private int guest;
     private int bedroom;
     private double price;
-    private List<AvailabilityPeriod> availability;
+    private double discount = 0;
+    private List<TimePeriod> availability;
+    private List<TimePeriod> pendinglist;
+    private List<TimePeriod> bookedList;
     @DBRef
     private User ownerID;
     private String placeType;
@@ -108,11 +110,11 @@ public class Place {
         this.price = price;
     }
 
-    public List<AvailabilityPeriod> getAvailability() {
+    public List<TimePeriod> getAvailability() {
         return availability;
     }
 
-    public void setAvailability(List<AvailabilityPeriod> availability) {
+    public void setAvailability(List<TimePeriod> availability) {
         this.availability = availability;
     }
 
@@ -176,5 +178,29 @@ public class Place {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public List<TimePeriod> getPendinglist() {
+        return pendinglist;
+    }
+
+    public void setPendinglist(List<TimePeriod> pendinglist) {
+        this.pendinglist = pendinglist;
+    }
+
+    public List<TimePeriod> getBookedList() {
+        return bookedList;
+    }
+
+    public void setBookedList(List<TimePeriod> bookedList) {
+        this.bookedList = bookedList;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 }

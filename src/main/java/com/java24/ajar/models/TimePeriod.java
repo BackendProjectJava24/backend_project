@@ -1,13 +1,12 @@
 package com.java24.ajar.models;
 
-import javax.sound.sampled.FloatControl;
 import java.time.LocalDate;
 
-public class AvailabilityPeriod {
+public class TimePeriod {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public AvailabilityPeriod() {
+    public TimePeriod() {
     }
 
     public LocalDate getStartDate() {

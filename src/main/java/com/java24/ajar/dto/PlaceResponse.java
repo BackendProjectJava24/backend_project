@@ -1,7 +1,7 @@
 package com.java24.ajar.dto;
 
 
-import com.java24.ajar.models.AvailabilityPeriod;
+import com.java24.ajar.models.TimePeriod;
 import jakarta.validation.constraints.NegativeOrZero;
 import jakarta.validation.constraints.NotNull;
 
@@ -37,7 +37,7 @@ public class PlaceResponse {
     @NegativeOrZero(message = "plice cannot be negative or zero. Please write right price")
     private double price;
     @NotNull(message = "add avalilability period")
-    private List<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
+    private List<TimePeriod> availabilityPeriods = new ArrayList<>();
     private String placeType;
 
 
@@ -84,11 +84,11 @@ public class PlaceResponse {
         this.price = price;
     }
 
-    public List<AvailabilityPeriod> getAvailabilityPeriods() {
+    public List<TimePeriod> getAvailabilityPeriods() {
         return availabilityPeriods;
     }
 
-    public void setAvailabilityPeriods(List<AvailabilityPeriod> availabilityPeriods) {
+    public void setAvailabilityPeriods(List<TimePeriod> availabilityPeriods) {
         this.availabilityPeriods = availabilityPeriods;
     }
 

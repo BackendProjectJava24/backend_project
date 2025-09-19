@@ -1,6 +1,6 @@
 package com.java24.ajar.dto;
 
-import com.java24.ajar.models.AvailabilityPeriod;
+import com.java24.ajar.models.TimePeriod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class PlaceRequest {
     private int guest;
     private int bedrooms;
     private double price;
-    private ArrayList<AvailabilityPeriod> availabilityPeriods = new ArrayList<>();
+    private ArrayList<TimePeriod> availabilityPeriods = new ArrayList<>();
     private String placeType;
 
 
@@ -118,11 +118,11 @@ public class PlaceRequest {
         this.price = price;
     }
 
-    public ArrayList<AvailabilityPeriod> getAvailabilityPeriods() {
+    public ArrayList<TimePeriod> getAvailabilityPeriods() {
         return availabilityPeriods;
     }
 
-    public void setAvailabilityPeriods(ArrayList<AvailabilityPeriod> availabilityPeriods) {
+    public void setAvailabilityPeriods(ArrayList<TimePeriod> availabilityPeriods) {
         this.availabilityPeriods = availabilityPeriods;
     }
 

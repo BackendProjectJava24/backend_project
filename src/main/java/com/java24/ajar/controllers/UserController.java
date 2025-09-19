@@ -1,6 +1,5 @@
 package com.java24.ajar.controllers;
 
-import com.java24.ajar.Repositories.UserRepository;
 import com.java24.ajar.dto.*;
 import com.java24.ajar.models.User;
 import com.java24.ajar.services.UserService;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -21,7 +18,7 @@ private UserService userService;
 
 @GetMapping("/viewuser")
 public  ResponseEntity<UserUpdateResponse> viewUser() {
-    UserUpdateResponse userUpdateResponse = userService.viewUser();
+    UserUpdateResponse userUpdateResponse = userService.userDeteils();
     return new ResponseEntity<>(userUpdateResponse, HttpStatus.OK);
 }
 

@@ -39,15 +39,6 @@ public class BookingController {
         return new ResponseEntity<>(saBooking, HttpStatus.CREATED);
     }
 
-/*
-    @GetMapping
-    @PreAuthorize("hasRole(ADMIN)")
-    public ResponseEntity<List<Booking>> getAllBookings() {
-        List<Booking> bookings = bookingService.getAllBookings();
-        return new ResponseEntity<>(bookings, HttpStatus.OK);
-    }
-
-*/
 
     @GetMapping("/allBooking")
     public ResponseEntity<List<Booking>> gettAllBooking() {
@@ -81,5 +72,15 @@ public class BookingController {
     public ResponseEntity<Booking> updateBooking(@PathVariable String id,  @RequestBody BookingDTO booking) {
         Booking bookingResponseDTO = bookingService.updateBooking(id, booking);
         return new ResponseEntity<>(bookingResponseDTO, HttpStatus.CREATED);
+    }
+
+
+
+
+
+    @PostMapping("/makeBooking")
+    public ResponseEntity<Object> makeBooking(@RequestBody BookingDTO booking) {
+        BookingResponseDTO makeBooking  = bookingService.makeBooking(booking);
+        return new ResponseEntity<>(makeBooking, HttpStatus.CREATED);
     }
 }

@@ -56,6 +56,6 @@ public class ViewPlacesController {
     @GetMapping("/getplacesbyowner")
     public ResponseEntity<List<Place>> getPlacesByOwner() {
         List<Place> places = placeService.getPlacesByOwner();
-        return new ResponseEntity<>(places, HttpStatus.OK);
+        return new ResponseEntity<>(places  , HttpStatus.OK);
     }
 }

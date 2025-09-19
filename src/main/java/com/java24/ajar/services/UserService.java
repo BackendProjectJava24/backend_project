@@ -105,7 +105,7 @@ public class UserService implements UserServiceImp {
     }
 
     @Override
-    public UserUpdateResponse viewUser() {
+    public UserUpdateResponse userDeteils() {
         User viewUser = checkAuthentication.getCurrentAuthenticatedUser();
         return convertUserToUserUpdateResponse(viewUser);
     }

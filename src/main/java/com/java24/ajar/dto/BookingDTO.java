@@ -1,11 +1,10 @@
 package com.java24.ajar.dto;
 
-import com.java24.ajar.models.AvailabilityPeriod;
-import com.java24.ajar.models.User;
+import com.java24.ajar.models.Place;
+import com.java24.ajar.models.TimePeriod;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 
 public class BookingDTO {
         private String placeId;
@@ -48,7 +47,14 @@ public class BookingDTO {
         this.guests = guests;
     }
 
-    public double calculateNights(LocalDate checkInDate, LocalDate checkOutDate) {
+    public int calculateNights() {
         return Period.between(checkInDate, checkOutDate).getDays();
+    }
+
+    public double calculateTotalAmount(Place place) {
+        double price = place.getPrice();
+        double totalDiscount = place.getDiscount() * price;
+        int nights = calculateNights();
+        return  + nights * price - totalDiscount ;
     }
 }

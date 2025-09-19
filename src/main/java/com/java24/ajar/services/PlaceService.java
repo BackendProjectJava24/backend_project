@@ -5,16 +5,11 @@ import com.java24.ajar.Repositories.UserRepository;
 import com.java24.ajar.config.CheckAuthentiction;
 import com.java24.ajar.dto.PlaceRequest;
 import com.java24.ajar.dto.PlaceResponse;
-import com.java24.ajar.exceptions.UnauthorizedException;
-import com.java24.ajar.models.AvailabilityPeriod;
+import com.java24.ajar.models.TimePeriod;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -102,7 +97,7 @@ public class PlaceService implements PlaceServiceImp {
         placeResponse.setBedrooms(place.getBedroom());
         placeResponse.setPrice(place.getPrice());
         placeResponse.setPlaceType(place.getPlaceType());
-        List<AvailabilityPeriod> availabilityPeriods = place.getAvailability();
+        List<TimePeriod> availabilityPeriods = place.getAvailability();
         if (availabilityPeriods != null) {
             placeResponse.setAvailabilityPeriods(availabilityPeriods);
         }
@@ -241,9 +236,9 @@ public class PlaceService implements PlaceServiceImp {
 
     // This method is linked to  findAvailablePlaces method.
     private boolean isPlaceAvailable(Place place, LocalDate startDate, LocalDate endDate) {
-        List<AvailabilityPeriod> existingPeriods = place.getAvailability();
+        List<TimePeriod> existingPeriods = place.getAvailability();
         boolean isAvailable = false;
-        for (AvailabilityPeriod existingPeriod : existingPeriods) {
+        for (TimePeriod existingPeriod : existingPeriods) {
             LocalDate startDateAvailable = existingPeriod.getStartDate();
             LocalDate endDateAvailable = existingPeriod.getEndDate();
             if ((startDate.isEqual(startDateAvailable) || startDate.isAfter(startDateAvailable) && startDate.isBefore(endDate))
@@ -296,10 +291,10 @@ public class PlaceService implements PlaceServiceImp {
         return cityPlaces;
     }
 
-    private List<AvailabilityPeriod> validateAvailabilityPeriod(List<AvailabilityPeriod> availabilityPeriod) {
+    private List<TimePeriod> validateAvailabilityPeriod(List<TimePeriod> availabilityPeriod) {
 
-        List<AvailabilityPeriod> newPeriods = new ArrayList<>();
-        for (AvailabilityPeriod period : availabilityPeriod) {
+        List<TimePeriod> newPeriods = new ArrayList<>();
+        for (TimePeriod period : availabilityPeriod) {
             if (period.getStartDate().isAfter(period.getEndDate())) {
                 throw new IllegalArgumentException("Start date cannot be after end date");
             }
@@ -309,7 +304,7 @@ public class PlaceService implements PlaceServiceImp {
             if (period.getStartDate().isBefore(LocalDate.now()) || period.getEndDate().isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Start date or end date cannot be in the pass");
             }
-            for (AvailabilityPeriod newPeriod : newPeriods) {
+            for (TimePeriod newPeriod : newPeriods) {
                 if (newPeriod.getStartDate().isAfter(period.getStartDate()) || period.getStartDate().isEqual(newPeriod.getStartDate()) || period.getStartDate().isBefore(newPeriod.getEndDate()) || period.getStartDate().isEqual(newPeriod.getEndDate())
                         && newPeriod.getEndDate().isBefore(period.getEndDate()) || period.getEndDate().isEqual(newPeriod.getEndDate())) {
                     throw new IllegalArgumentException("you have already added this period");

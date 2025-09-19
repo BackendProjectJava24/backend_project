@@ -24,8 +24,17 @@ public class Booking {
     private LocalDate checkOutDate;
 
     private int guests;  // Number of people staying
+    private int nights;
 
-    private Double totalAmount;  // Calculated based on nights × price
+    public int getNights() {
+        return nights;
+    }
+
+    public void setNights(int nights) {
+        this.nights = nights;
+    }
+
+    private double totalAmount;  // Calculated based on nights × price
 
     @CreatedDate
     private LocalDate createdAt;
