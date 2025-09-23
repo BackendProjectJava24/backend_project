@@ -10,24 +10,24 @@ import com.java24.ajar.models.TimePeriod;
 import com.java24.ajar.models.Booking;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
+import com.java24.ajar.services.management.BookingManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-public class BookingService implements BookingServiceImp {
+public class BookingService extends BookingManagement implements BookingServiceImp {
     @Autowired
     private final BookingRepository bookingRepository;
     private final PlaceRepository placeRepository;
     @Autowired
     CheckAuthentiction checkAuthentication;
-    @Autowired
-    private PlaceService placeService;
+
+
 
     public BookingService(BookingRepository bookingRepository, PlaceRepository placeRepository) {
         this.bookingRepository = bookingRepository;
@@ -43,7 +43,7 @@ public class BookingService implements BookingServiceImp {
                 .orElseThrow(() -> new IllegalArgumentException("Place not found"));
 
         // Validate dates against availability
-        if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
+        if (!isAllreadyBooked(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
             throw new IllegalArgumentException("Place is not available for selected dates");
         }
 
@@ -257,13 +257,13 @@ if (bookings.isEmpty() || bookings == null) {
          Place place = placeRepository.findById(bookingDTO.getPlaceId())
                 .orElseThrow(() -> new IllegalArgumentException("Place not found"));
 
-         //
-        if(!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())){
+         // check if the the date is
+        if(isAllreadyBooked(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())){
            throw new IllegalArgumentException("the place is not available");
         }
 
 
-        if (isAllreadyBooked(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())){
+        if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())){
             throw new IllegalArgumentException("the place is already booked");
         }
 
@@ -272,24 +272,14 @@ if (bookings.isEmpty() || bookings == null) {
         if (isPlacePending(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
             throw new IllegalStateException("the place is already pending");
         }
-
          */
-        Booking booking = new Booking();
 
-        booking.setCheckInDate(bookingDTO.getCheckInDate());
-        booking.setCheckOutDate(bookingDTO.getCheckOutDate());
-        booking.setCustomer(user);
-        booking.setPlace(place);
-        booking.setGuests(bookingDTO.getGuests());
-        booking.setNights(bookingDTO.calculateNights());
-        booking.setTotalAmount(bookingDTO.calculateTotalAmount(place));
 
         // update the list which inclues the booked period for the place
-        updatePlaceBookedList(place,  bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate());
+        placeRepository.save(updatePlaceBookedList(place,  bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate()));
 
         // save the new booking in the database
-        bookingRepository.save(booking);
-
+        Booking booking = bookingRepository.save(saveBookingInDatabase(bookingDTO,user,place));
 
         return convertBookingToBookingDTO(booking);
     }
@@ -304,55 +294,4 @@ if (bookings.isEmpty() || bookings == null) {
     }
     //
 
-
-    //
-    private boolean isPlaceAvailable(Place place, LocalDate startDate, LocalDate endDate) {
-        return checkTimePeriod(place.getAvailability(), startDate, endDate);
-    }
-
-    // check the place is not pending in this period
-    private boolean  isPlacePending(Place place, LocalDate checInDate, LocalDate checkOutDate)  {
-     return checkTimePeriod(place.getPendinglist(), checInDate, checkOutDate);
-    }
-    //
-    private void updatePlaceBookedList(Place place, LocalDate checkInDate, LocalDate checkOutDate) {
-        TimePeriod bookedPeriod = new TimePeriod();
-        bookedPeriod.setStartDate(checkInDate);
-        bookedPeriod.setEndDate(checkOutDate);
-
-        // check if the booked list is existed or.
-        if (place.getBookedList() == null) {
-            List<TimePeriod> newBookedList = new ArrayList<TimePeriod>();
-            newBookedList.add(bookedPeriod);
-            place.setBookedList(newBookedList);
-        }else{
-            List<TimePeriod> updatedBookedList = place.getBookedList();
-            updatedBookedList.add(bookedPeriod);
-            place.setBookedList(updatedBookedList);
-        }
-        placeRepository.save(place);
-    }
-
-    private boolean isAllreadyBooked(Place place, LocalDate startDate, LocalDate endDate) {
-        // check if the inchecknig and outchecking dates is in the range of avilability period
-        return checkTimePeriod(place.getBookedList(), startDate, endDate);
-    }
-    // this method is used to check of a date is existed between to dates.
-    private boolean checkTimePeriod(List<TimePeriod> existingPeriods, LocalDate checkInDate, LocalDate checkOutDate) {
-        boolean isAlreadyBooked = false;
-        for (TimePeriod existingPeriod : existingPeriods) {
-            if (checkInDate.isAfter(existingPeriod.getStartDate()) && checkInDate.isBefore(existingPeriod.getEndDate())) {
-                isAlreadyBooked = true;
-            }
-            if (checkOutDate.isBefore(existingPeriod.getEndDate()) && checkOutDate.isAfter(existingPeriod.getStartDate())) {
-                isAlreadyBooked = true;
-            }
-            if (checkInDate.isEqual(existingPeriod.getStartDate()) || checkInDate.isEqual(existingPeriod.getEndDate())
-                    || checkOutDate.isEqual(existingPeriod.getStartDate()) || checkOutDate.isEqual(existingPeriod.getEndDate())) {
-                isAlreadyBooked = true;
-            }
-        }
-        //  overlaps found
-        return isAlreadyBooked; // Place is available
-    }
 }
