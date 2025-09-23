@@ -4,6 +4,7 @@ import com.java24.ajar.Repositories.BookingRepository;
 import com.java24.ajar.Repositories.PlaceRepository;
 import com.java24.ajar.Repositories.UserRepository;
 
+import com.java24.ajar.checkData.ChackDate;
 import com.java24.ajar.dto.BookingDTO;
 import com.java24.ajar.dto.BookingResponseDTO;
 import com.java24.ajar.exceptions.UnauthorizedException;
@@ -11,12 +12,14 @@ import com.java24.ajar.models.AvailabilityPeriod;
 import com.java24.ajar.models.Booking;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -28,6 +31,9 @@ public class BookingService implements BookingServiceImp {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
+
+    // this class includes all date and time vatidations
+    ChackDate chackDate = new ChackDate();
 
     public BookingService(BookingRepository bookingRepository, UserRepository userRepository, PlaceRepository placeRepository) {
         this.bookingRepository = bookingRepository;
@@ -57,7 +63,7 @@ public class BookingService implements BookingServiceImp {
                 .orElseThrow(() -> new IllegalArgumentException("Place not found"));
 
         // Validate dates against availability
-        if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
+        if (!chackDate.isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
             throw new IllegalArgumentException("Place is not available for selected dates");
         }
 
@@ -109,22 +115,7 @@ public class BookingService implements BookingServiceImp {
         return bookingResponseDTO;
     }
 
-    // the result is true all the time i need more help her to define the problem
-    private boolean isPlaceAvailable(Place place, LocalDate startDate, LocalDate endDate) {
-        List<AvailabilityPeriod> existingPeriods = place.getAvailability();
-        boolean isAvailable = false;
-        for (AvailabilityPeriod existingPeriod : existingPeriods) {
-            LocalDate startDateAvailable = existingPeriod.getStartDate();
-            LocalDate endDateAvailable = existingPeriod.getEndDate();
-            if ((startDate.isEqual(startDateAvailable) || startDate.isAfter(startDateAvailable) && startDate.isBefore(endDate))
-                    &&(endDate.isEqual(endDateAvailable) || endDate.isBefore(endDateAvailable)) ) {
-                //  overlaps found
-               isAvailable = true;  // the place is not avaible
-            }
-        }
-        //  overlaps found
-        return isAvailable; // Place is available
-    }
+
 
     @Override
     public List<Booking> getAllBookings() {
@@ -168,7 +159,7 @@ if (bookings.isEmpty() || bookings == null) {
     Place updatedPlace =  updatePlaceAvailability(place, id);
 
         // Validate dates against availability
-        if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
+        if (!chackDate.isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
             throw new IllegalArgumentException("Place is not available for selected dates");
         }
 
