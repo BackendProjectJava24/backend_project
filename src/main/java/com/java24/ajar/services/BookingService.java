@@ -134,7 +134,8 @@ if (bookings.isEmpty() || bookings == null) {
     Place updatedPlace =  updatePlaceAvailability(place, id);
 
         // Validate dates against availability
-        if (!isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
+        if (!
+                isPlaceAvailable(place, bookingDTO.getCheckInDate(), bookingDTO.getCheckOutDate())) {
             throw new IllegalArgumentException("Place is not available for selected dates");
         }
 
