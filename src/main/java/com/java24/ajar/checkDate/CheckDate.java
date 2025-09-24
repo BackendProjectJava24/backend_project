@@ -22,7 +22,6 @@ public class CheckDate {
                 IsTrue = true;
             }
         }
-        //  overlaps found
         return IsTrue; // Place is available
     }
 }

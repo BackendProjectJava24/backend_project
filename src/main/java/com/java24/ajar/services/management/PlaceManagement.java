@@ -1,5 +1,6 @@
 package com.java24.ajar.services.management;
 
+import com.java24.ajar.checkDate.CheckDate;
 import com.java24.ajar.models.Place;
 import com.java24.ajar.models.TimePeriod;
 
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceManagement {
+public class PlaceManagement extends CheckDate {
 
     public PlaceManagement() {}
 
@@ -30,4 +31,23 @@ public class PlaceManagement {
         return place;
     }
 
+
+
+
+    // This method check if the incheckd and outchecked date are in the range of availability time
+    public boolean isAllreadyBooked(Place place, LocalDate startDate, LocalDate endDate) {
+        // check if the inchecknig and outchecking dates is in the range of avilability period
+        return checkTimePeriod(place.getBookedList(), startDate, endDate);
+    }
+
+
+    //
+    public boolean isPlaceAvailable(Place place, LocalDate startDate, LocalDate endDate) {
+        return checkTimePeriod(place.getAvailability(), startDate, endDate);
+    }
+
+    // check the place is not pending in this period
+    public boolean isPlacePending(Place place, LocalDate checInDate, LocalDate checkOutDate) {
+        return checkTimePeriod(place.getPendinglist(), checInDate, checkOutDate);
+    }
 }
